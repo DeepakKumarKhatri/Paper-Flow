@@ -1,9 +1,40 @@
+const Assignment = require("../models/assignment");
+
+const uploadAssignment = async (req, res) => {
+  const title = req.body.title;
+  const fileName = req.file.filename;
+
+  try {
+    await Assignment.create({ pdf: fileName, title: title });
+    res.status(201).json({ message: "Assignment uploaded successfully" });
+  } catch (error) {
+    res.json({ message: error });
+  }
+};
+
 const studentDashboad = async (req, res) => {
-  res.end("Student Dashboad");
+  const title = req.body.title;
+  const fileName = req.file.filename;
+
+  console.log(title);
+  console.log(fileName);
+
+  try {
+    await Assignment.create({ pdf: fileName, title: title });
+    res.status(201).json({ message: "Assignment uploaded successfully" });
+  } catch (error) {
+    res.json({ message: error });
+  }
 };
 
 const allAssignments = async (req, res) => {
-  res.end("All Assignments");
+  try {
+    Assignment.find({}).then(assignments =>{
+      res.send({message: assignments});
+    })
+  } catch (error) {
+    res.send({message: error});
+  }
 };
 
 const getAssignment = async (req, res) => {
@@ -64,10 +95,6 @@ const uploadQuiz = async (req, res) => {
 
 const uploadQuizSolution = async (req, res) => {
   res.end("Upload Quiz Solution");
-};
-
-const uploadAssignment = async (req, res) => {
-  res.end("Upload Assignment");
 };
 
 const uploadAssignmentSolution = async (req, res) => {
@@ -148,5 +175,5 @@ module.exports = {
   getAssignment,
   getAssignmentSolution,
   getPastPaper,
-  getQuiz
+  getQuiz,
 };
