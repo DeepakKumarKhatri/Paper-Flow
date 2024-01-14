@@ -16,23 +16,18 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
+router.get("/", studentController.studentDashboad);
 router.post(
   "/assignment/:courseID/:assignmentId",
-  upload.single("file"),
+  upload.single("assignment"),
   studentController.uploadAssignment
 );
-
-router.get("/", studentController.studentDashboad);
 router.get("/assignments/:courseID", studentController.allAssignments);
 router.get(
   "/assignment/:courseID/:assignmentId",
   studentController.getAssignment
 );
 
-router.get(
-  "/assignmentSolutions/:courseID",
-  studentController.allAssignmentsSolution
-);
 router.get(
   "/assignmentSolution/:courseID/:assignmentId",
   studentController.getAssignmentSolution

@@ -4,6 +4,11 @@ import axios from "axios";
 function App() {
   const [title, setTitle] = useState("");
   const [file, setFile] = useState("");
+  const [assignmentNumber, setAssignmentNumber] = useState(0);
+  const [assignmentDate, setAssignmentDate] = useState("");
+  const [assignmentFileName, setAssignmentFileName] = useState("");
+  const [assignmentSolution, setAssignmentSolution] = useState([]);
+
   const [allImage, setAllImage] = useState([]);
 
   useEffect(() => {
@@ -36,9 +41,9 @@ function App() {
 
       if (result.data.message === "Assignment uploaded successfully") {
         alert("Uploaded Successfully!!!");
-        setTitle(""); 
+        setTitle("");
         setFile("");
-        getPdf(); 
+        getPdf();
       } else {
         console.error("Error uploading assignment:", result.data.message);
       }
@@ -59,7 +64,6 @@ function App() {
     <div className="App" onSubmit={submitImage}>
       <form className="formStyle">
         <h4>Upload Pdf in React</h4>
-        <br />
         <input
           type="text"
           className="form-control"
@@ -67,7 +71,6 @@ function App() {
           required
           onChange={(e) => setTitle(e.target.value)}
         />
-        <br />
         <input
           type="file"
           className="form-control"
@@ -75,7 +78,23 @@ function App() {
           required
           onChange={(e) => setFile(e.target.files[0])}
         />
-        <br />
+
+        <input
+          type="text"
+          className="form-control"
+          placeholder="Assignment Number"
+          required
+          onChange={(e) => setAssignmentNumber(e.target.value)}
+        />
+
+        <input
+          type="datetime"
+          className="form-control"
+          placeholder="Assignment Date"
+          required
+          onChange={(e) => setAssignmentDate(e.target.value)}
+        />
+
         <button type="submit">Submit</button>
       </form>
       <div className="uploaded">
@@ -85,7 +104,7 @@ function App() {
             ? ""
             : allImage.map((data) => {
                 return (
-                  <div className="inner-div">
+                  <div className="inner-div" key={data.title}>
                     <h6>Title: {data.title}</h6>
                     <button
                       className="btn btn-primary"

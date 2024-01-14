@@ -17,8 +17,8 @@ var app = express();
 // Connect to MongoDB
 connectMongoDB(
   // "mongodb+srv://khatrideepak112:JEGoqq3DDHmHzBJt@paper-flow.w0lfxij.mongodb.net/?retryWrites=true&w=majority"
-  "mongodb+srv://khatrideepak112:73w7t0WCrend4Xi6@cluster0.zeonqsk.mongodb.net/?retryWrites=true&w=majority"
-  // "mongodb://127.0.0.1:27017/paper-flow"
+  // "mongodb+srv://khatrideepak112:73w7t0WCrend4Xi6@cluster0.zeonqsk.mongodb.net/?retryWrites=true&w=majority"
+  "mongodb://127.0.0.1:27017/paper-flow"
 );
 
 // view engine setup
