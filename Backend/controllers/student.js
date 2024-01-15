@@ -1,32 +1,89 @@
 const Assignment = require("../models/assignment");
+const Course = require("../models/course");
+
+const {
+  ref,
+  getDownloadURL,
+  uploadBytesResumable,
+} = require("firebase/storage");
 
 const studentDashboad = async (req, res) => {
   res.end("Welcome Student Dashboad");
 };
 
-const uploadAssignment = async (req, res) => {
-  const body = req.body;
-  console.log(body);
-  console.log(req.file);
-  res.end("Upload Assignment");
-  // const title = req.body.title;
-  // const fileName = req.file.filename;
+function formatDateNow() {
+  const currentDate = new Date();
+  const day = currentDate.getDate();
+  const month = currentDate.getMonth() + 1;
+  const year = currentDate.getFullYear();
 
-  // try {
-  //   await Assignment.create({ pdf: fileName, title: title });
-  //   res.status(201).json({ message: "Assignment uploaded successfully" });
-  // } catch (error) {
-  //   res.json({ message: error });
-  // }
+  const formattedDay = day < 10 ? `0${day}` : day;
+  const formattedMonth = month < 10 ? `0${month}` : month;
+
+  return `${formattedDay}-${formattedMonth}-${year}`;
+}
+
+const uploadAssignment = async (req, res, storage) => {
+  try {
+    const course = await Course.findOne({ courseCode: req.params.courseID });
+
+    if (course.length === 0) {
+      res.json({ status: "error", message: "Course not found" });
+      return;
+    }
+
+    const fileName = Date.now() + "_" + req.file.originalname;
+
+    const storageRef = ref(storage, `Assignments/${fileName}`);
+
+    // Create file metadata including the content type
+    const metadata = {
+      contentType: req.file.mimetype,
+    };
+
+    // Upload the file in the bucket storage
+    const snapshot = await uploadBytesResumable(
+      storageRef,
+      req.file.buffer,
+      metadata
+    );
+
+    // Grab the public url
+    const downloadURL = await getDownloadURL(snapshot.ref);
+    const assignmentResponse = await Assignment.create({
+      title: fileName,
+      assignmentDate: formatDateNow(),
+      fileType: req.file.mimetype,
+      // uploadedByUser: null,
+      // instructor: req.body.instructor,
+      assignmentSolutions: [],
+      url: downloadURL,
+    });
+
+    // Ensure the 'assignments' array is initialized before pushing
+    if (!course.assignments) {
+      course.assignments = [];
+    }
+
+    // Push the assignment into the 'assignments' array
+    course.assignments.push(assignmentResponse);
+
+    // Save the course
+    await course.save();
+
+    res.status(201).json({ status: "OK" });
+  } catch (error) {
+    return res.status(400).send(error.message);
+  }
 };
 
 const allAssignments = async (req, res) => {
   try {
-    Assignment.find({}).then(assignments =>{
-      res.send({message: assignments});
-    })
+    Assignment.find({}).then((assignments) => {
+      res.send({ message: assignments });
+    });
   } catch (error) {
-    res.send({message: error});
+    res.send({ message: error });
   }
 };
 

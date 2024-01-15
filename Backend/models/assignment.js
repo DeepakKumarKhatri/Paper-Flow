@@ -3,28 +3,33 @@ const mongoose = require("mongoose");
 const assignmentSchema = new mongoose.Schema({
   title: {
     type: String,
-    required: true,
   },
   assignmentDate: {
     type: String,
-    required: true,
+  },
+  fileType: {
+    type: String,
   },
   // uploadedByUser: {
   //   type: mongoose.Types.ObjectId,
   //   ref: "Student", 
   //   required: true,
   // },
-  instructor: {
-    type: [String],
+  // instructor: {
+  //   type: [String],
+  // },
+  url:{
+    type: String,
+    required: true,
   },
-  assignmentSolutions: [
-    {
-      assignmentSolution: {
-        type: mongoose.Types.ObjectId,
-        ref: "MaterialSolution",
-      },
-    },
-  ],
+  // assignmentSolutions: [
+  //   {
+  //     assignmentSolution: {
+  //       type: mongoose.Types.ObjectId,
+  //       ref: "MaterialSolution",
+  //     },
+  //   },
+  // ],
 });
 
 const Assignment = mongoose.model("Assignment", assignmentSchema);

@@ -1,26 +1,25 @@
 var express = require("express");
 var router = express.Router();
 var studentController = require("../controllers/student");
-
 const multer = require("multer");
+const { initializeApp } = require("firebase/app");
+const { getStorage } = require("firebase/storage");
+const { firebaseConfig } = require("../configuration/config");
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "./assignments");
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + "-" + file.originalname;
-    cb(null, uniqueSuffix);
-  },
-});
+//Initialize the firebase application
+initializeApp(firebaseConfig);
 
-const upload = multer({ storage: storage });
+// Initialize Cloud Storage and get a reference to the service
+const storage = getStorage();
+
+// Setting up multer as a middleware to grab file uploads
+const upload = multer({ storage: multer.memoryStorage() });
 
 router.get("/", studentController.studentDashboad);
 router.post(
-  "/assignment/:courseID/:assignmentId",
+  "/assignment/:courseID",
   upload.single("assignment"),
-  studentController.uploadAssignment
+  (req, res) => studentController.uploadAssignment(req, res, storage)
 );
 router.get("/assignments/:courseID", studentController.allAssignments);
 router.get(

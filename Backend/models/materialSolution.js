@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const materialSolutionSchema = new mongoose.Schema({
   uploadedByUser: {
-    type: Number,
+    type: String,
     required: true,
   }
 });
