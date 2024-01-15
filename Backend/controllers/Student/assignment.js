@@ -1,27 +1,12 @@
-const Assignment = require("../models/assignment");
-const Course = require("../models/course");
+const Assignment = require("../../models/assignment");
+const Course = require("../../models/course");
+const formatDateNow = require("../../helpers/formattedDate");
 
 const {
   ref,
   getDownloadURL,
   uploadBytesResumable,
 } = require("firebase/storage");
-
-const studentDashboad = async (req, res) => {
-  res.end("Welcome Student Dashboad");
-};
-
-function formatDateNow() {
-  const currentDate = new Date();
-  const day = currentDate.getDate();
-  const month = currentDate.getMonth() + 1;
-  const year = currentDate.getFullYear();
-
-  const formattedDay = day < 10 ? `0${day}` : day;
-  const formattedMonth = month < 10 ? `0${month}` : month;
-
-  return `${formattedDay}-${formattedMonth}-${year}`;
-}
 
 const uploadAssignment = async (req, res, storage) => {
   try {
@@ -79,44 +64,49 @@ const uploadAssignment = async (req, res, storage) => {
 
 const allAssignments = async (req, res) => {
   try {
-    Assignment.find({}).then((assignments) => {
-      res.send({ message: assignments });
-    });
+    const course = await Course.findOne({ courseCode: req.params.courseID });
+
+    if (course.length === 0) {
+      res.json({ status: "error", message: "Course not found" });
+      return;
+    }
+
+    if (!course.assignments) {
+      course.assignments = [];
+    }
+    let response = [];
+    course.assignments.map((assignment) => response.push(assignment));
+    console.log(response);
+
+    res.send({ data: response });
   } catch (error) {
     res.send({ message: error });
   }
 };
 
 const getAssignment = async (req, res) => {
-  res.end("getAssignment");
+  try {
+    const course = await Course.findOne({ courseCode: req.params.courseID });
+
+    if (course.length === 0) {
+      res.json({ status: "error", message: "Course not found" });
+      return;
+    }
+    const assignmentResponse = Assignment.find({
+      title: req.params.title,
+    }).then((assignments) => {
+      res.send({ data: assignments });
+    });
+    if (!assignmentResponse) {
+      res.json({ status: "error", message: "Assignment not found" });
+    }
+  } catch (error) {
+    res.send({ status: error });
+  }
 };
 
 const getAssignmentSolution = async (req, res) => {
   res.end("getAssignmentSolution");
-};
-
-const getPastPaper = async (req, res) => {
-  res.end("getPastPaper");
-};
-
-const getQuiz = async (req, res) => {
-  res.end("getQuiz");
-};
-
-const allQuizzes = async (req, res) => {
-  res.end("All Quizes");
-};
-
-const allQuizesSolution = async (req, res) => {
-  res.end("All Quizes Solution");
-};
-
-const allPastPaper = async (req, res) => {
-  res.end("All Past Papers");
-};
-
-const requestPastPaper = async (req, res) => {
-  res.end("Request past paper route");
 };
 
 const requestAssignment = async (req, res) => {
@@ -127,28 +117,8 @@ const requestAssignmentSolution = async (req, res) => {
   res.end("Request Assignment Solution route");
 };
 
-const requestQuiz = async (req, res) => {
-  res.end("Request Quiz route");
-};
-
-const requestQuizSolution = async (req, res) => {
-  res.end("Request Quiz Solution route");
-};
-
-const uploadQuiz = async (req, res) => {
-  res.end("Upload Quiz");
-};
-
-const uploadQuizSolution = async (req, res) => {
-  res.end("Upload Quiz Solution");
-};
-
 const uploadAssignmentSolution = async (req, res) => {
   res.end("Upload Assignment Solution");
-};
-
-const uploadPastPaper = async (req, res) => {
-  res.end("Upload Past Paper");
 };
 
 const deleteAssignment = async (req, res) => {
@@ -159,14 +129,6 @@ const updateAssignment = async (req, res) => {
   res.end("Update Assignment Past Paper");
 };
 
-const deletePastPaper = async (req, res) => {
-  res.end("Delete Past Paper Past Paper");
-};
-
-const updatePastPaper = async (req, res) => {
-  res.end("Update Past Paper Past Paper");
-};
-
 const deleteAssignmentSolution = async (req, res) => {
   res.end("Delete Assignment Solution Paper");
 };
@@ -175,50 +137,16 @@ const updateAssignmentSolution = async (req, res) => {
   res.end("Update AssignmentSolution Paper");
 };
 
-const deleteQuiz = async (req, res) => {
-  res.end("Delete Quiz Paper Past Paper");
-};
-
-const updateQuiz = async (req, res) => {
-  res.end("Update Quiz Route");
-};
-
-const deleteQuizSolution = async (req, res) => {
-  res.end("Delete Quiz Solution Past Paper");
-};
-
-const updateQuizSolution = async (req, res) => {
-  res.end("Update Quiz Solution Route");
-};
-
 module.exports = {
-  studentDashboad,
-  uploadPastPaper,
-  uploadAssignmentSolution,
   uploadAssignment,
-  uploadQuizSolution,
-  uploadQuiz,
-  requestQuizSolution,
-  requestQuiz,
-  requestAssignmentSolution,
-  requestAssignment,
-  requestPastPaper,
-  updateQuizSolution,
-  deleteQuizSolution,
-  updateQuiz,
-  deleteQuiz,
   updateAssignmentSolution,
   deleteAssignmentSolution,
-  updatePastPaper,
-  deletePastPaper,
   updateAssignment,
   deleteAssignment,
-  allAssignments,
-  allPastPaper,
-  allQuizzes,
-  allQuizesSolution,
-  getAssignment,
+  uploadAssignmentSolution,
+  requestAssignmentSolution,
+  requestAssignment,
   getAssignmentSolution,
-  getPastPaper,
-  getQuiz,
+  getAssignment,
+  allAssignments,
 };

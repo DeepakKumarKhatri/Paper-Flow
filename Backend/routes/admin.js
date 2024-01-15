@@ -1,34 +1,36 @@
 var express = require("express");
 var router = express.Router();
-var adminController = require("../controllers/admin");
+var adminAssignmentController = require("../controllers/Admin/assignment");
+var adminQuizController = require("../controllers/Admin/quiz");
+var adminPastPaperController = require("../controllers/Admin/pastpaper");
+var adminCourseController = require("../controllers/Admin/course");
 
-router.get("/", adminController.adminDashboad);
-router.get("/assignments/:courseID", adminController.allAssignments);
-router.get("/assignmentSolutions/:courseID", adminController.allAssignmentsSolution);
-router.get("/pastPapers/:courseID", adminController.allPastPaper);
-router.get("/quizzes/:courseID", adminController.allQuizzes);
+router.get("/", adminPastPaperController.adminDashboad);
+router.get("/assignments/:courseID", adminAssignmentController.allAssignments);
+router.get("/assignmentSolutions/:courseID", adminAssignmentController.allAssignmentsSolution);
+router.get("/pastPapers/:courseID", adminPastPaperController.allPastPaper);
+router.get("/quizzes/:courseID", adminQuizController.allQuizzes);
 
-router.delete("/assignment/:courseID/:assignmentId", adminController.deleteAssignment);
-router.delete("/assignmentSolution/:courseID/:assignmentId", adminController.deleteAssignmentSolution);
-router.delete("/pastPaper/:courseID/:year", adminController.deletePastPaper);
+router.delete("/assignment/:courseID/:assignmentId", adminAssignmentController.deleteAssignment);
+router.delete("/assignmentSolution/:courseID/:assignmentId", adminAssignmentController.deleteAssignmentSolution);
+router.delete("/pastPaper/:courseID/:year", adminPastPaperController.deletePastPaper);
 
-router.delete("/quiz/:courseID/:quizId", adminController.deleteQuiz);
-router.delete("/quizSolution/:courseID/:quizId", adminController.deleteQuizSolution);
+router.delete("/quiz/:courseID/:quizId", adminQuizController.deleteQuiz);
+router.delete("/quizSolution/:courseID/:quizId", adminQuizController.deleteQuizSolution);
 
-router.post("/course", adminController.addCourse);
-router.delete("/course", adminController.removeCourse);
+router.post("/addCourse/:id", adminCourseController.addCourse);
+router.delete("/course/:id", adminCourseController.removeCourse);
 
-router.get("/unapprovedAssignments", adminController.unapprovedAssignments);
-router.get("/unapprovedAssignmentSolutions", adminController.unapprovedAssignmentSolutions);
-router.get("/unapprovedPastPapers", adminController.unapprovedPastPapers);
-router.get("/unapprovedQuizzes", adminController.unapprovedQuizzes);
-router.get("/unapprovedQuizzesSolutions", adminController.unapprovedQuizzesSolutions);
+router.get("/unapprovedAssignments", adminAssignmentController.unapprovedAssignments);
+router.get("/unapprovedAssignmentSolutions", adminAssignmentController.unapprovedAssignmentSolutions);
+router.get("/unapprovedPastPapers", adminPastPaperController.unapprovedPastPapers);
+router.get("/unapprovedQuizzes", adminQuizController.unapprovedQuizzes);
+router.get("/unapprovedQuizzesSolutions", adminQuizController.unapprovedQuizzesSolutions);
 
-router.post("/addAssignment/:id", adminController.addAssignment);
-router.post("/addAssignmentSolution/:id", adminController.addAssignmentSolution);
-router.post("/addCourse/:id", adminController.addCourse);
-router.post("/addPastPaper/:id", adminController.addPastPaper);
-router.post("/addQuiz/:id", adminController.addQuiz);
-router.post("/addQuizSolution/:id", adminController.addQuizSolution);
+router.post("/addAssignment/:id", adminAssignmentController.addAssignment);
+router.post("/addAssignmentSolution/:id", adminAssignmentController.addAssignmentSolution);
+router.post("/addPastPaper/:id", adminPastPaperController.addPastPaper);
+router.post("/addQuiz/:id", adminQuizController.addQuiz);
+router.post("/addQuizSolution/:id", adminQuizController.addQuizSolution);
 
 module.exports = router;
