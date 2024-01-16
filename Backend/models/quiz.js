@@ -9,11 +9,11 @@ const quizSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  // uploadedByUser: {
-  //   type: mongoose.Types.ObjectId,
-  //   ref: "Student", 
-  //   required: true,
-  // },
+  uploadedByUser: {
+    type: mongoose.Types.ObjectId,
+    ref: "Student", 
+    required: true,
+  },
   instructor: {
     type: [String],
   },

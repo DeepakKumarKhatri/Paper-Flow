@@ -3,6 +3,7 @@ const Course = require("../../models/course");
 const formatDateNow = require("../../helpers/formattedDate");
 const MaterialSolution = require("../../models/materialSolution");
 const mongoose = require("mongoose");
+const Student = require("../../models/student");
 
 const {
   ref,
@@ -12,6 +13,13 @@ const {
 
 const uploadAssignment = async (req, res, storage) => {
   try {
+    const studentEmail = req.body.studentEmail;
+    const student = await Student.findOne({ email: studentEmail });
+    if (!student) {
+      res.json({ status: "error", message: "Student not valid" });
+      return;
+    }
+
     const course = await Course.findOne({ courseCode: req.params.courseID });
 
     if (course.length === 0) {
@@ -41,7 +49,7 @@ const uploadAssignment = async (req, res, storage) => {
       title: fileName,
       assignmentDate: formatDateNow(),
       fileType: req.file.mimetype,
-      // uploadedByUser: null,
+      uploadedByUser: student._id,
       // instructor: req.body.instructor,
       assignmentSolutions: [],
       url: downloadURL,
@@ -54,9 +62,11 @@ const uploadAssignment = async (req, res, storage) => {
 
     // Push the assignment into the 'assignments' array
     course.assignments.push(assignmentResponse);
+    student.uploadedAssignments.push(assignmentResponse);
 
-    // Save the course
+    // Save the course & student
     await course.save();
+    await student.save();
 
     res.status(201).json({ status: "OK" });
   } catch (error) {
@@ -109,6 +119,13 @@ const getAssignment = async (req, res) => {
 
 const uploadAssignmentSolution = async (req, res, storage) => {
   try {
+    const studentEmail = req.body.studentEmail;
+    const student = await Student.findOne({ email: studentEmail });
+    if (!student) {
+      res.json({ status: "error", message: "Student not valid" });
+      return;
+    }
+
     const course = await Course.findOne({ courseCode: req.params.courseID });
 
     if (!course) {
@@ -175,15 +192,18 @@ const uploadAssignmentSolution = async (req, res, storage) => {
       _id: solutionId,
       url: downloadURL,
       solutionFileName: fileName,
+      uploadedByUser: student._id,
     };
 
     assignmentFind.assignmentSolutions.push(dataToSave);
+    student.uploadedSolutions.push(dataToSave);
 
     // Create the assignmentSolution in MaterialSolution Entity with the same _id
     await MaterialSolution.create(dataToSave);
 
-    // Save the assignment
+    // Save the assignment and student
     await assignmentFind.save();
+    await student.save();
 
     res.status(201).json({ status: "OK" });
   } catch (error) {
@@ -191,16 +211,18 @@ const uploadAssignmentSolution = async (req, res, storage) => {
   }
 };
 
+/**
+ * Retrieves the solution for a specific assignment in a course.
+ */
 const getAssignmentSolution = async (req, res) => {
   try {
     const course = await Course.findOne({ courseCode: req.params.courseID });
 
     if (!course) {
-      res.json({ status: "error", message: "Course not found" });
+      res.status(404).json({ status: "error", message: "Course not found" });
       return;
     }
 
-    // Fetch complete assignment data for each assignment ID
     const populatedAssignments = await Promise.all(
       course.assignments.map(async (assignment) => {
         const assignmentDocument = await Assignment.findById(assignment._id);
@@ -208,13 +230,12 @@ const getAssignmentSolution = async (req, res) => {
       })
     );
 
-    // Find the assignment with the specified title
     const assignmentToUpdate = populatedAssignments.find(
       (assignment) => assignment.title === req.params.title
     );
 
     if (!assignmentToUpdate) {
-      res.json({
+      res.status(404).json({
         status: "error",
         message: "Assignment not found for this course",
       });
@@ -225,36 +246,66 @@ const getAssignmentSolution = async (req, res) => {
       title: req.params.title,
     });
 
-    console.log(assignmentFind);
-
-    // Fetch complete assignment data for each assignment ID
     const assignmentSolution = await Promise.all(
       assignmentFind.assignmentSolutions.map(async (assignmentSol) => {
-        console.log("DEMO::::: " + assignmentSol);
         const assignmentSolutionDocument = await MaterialSolution.findById(
           assignmentSol._id
         );
-        console.log("DEMO 222::::: " + assignmentSolutionDocument);
         return assignmentSolutionDocument.toObject();
       })
     );
 
-    res.status(201).json({ data: assignmentSolution });
+    res.status(200).json({ data: assignmentSolution });
   } catch (error) {
-    return res.status(400).send(error.message);
+    res.status(400).send(error.message);
   }
 };
 
-const requestAssignment = async (req, res) => {
-  res.end("Request Assignment route");
-};
-
-const requestAssignmentSolution = async (req, res) => {
-  res.end("Request Assignment Solution route");
-};
-
+/**
+ * Deletes an assignment from a student's account.
+ */
 const deleteAssignment = async (req, res) => {
-  res.end("Delete Assignment Past Paper");
+  try {
+    const { studentEmail } = req.body;
+    console.log(studentEmail);
+
+    // Find the student document using the email
+    const student = await Student.findOne({ email: studentEmail });
+    console.log(student);
+
+    if (!student) {
+      // If the student is not valid, send an error response and return
+      res.json({ status: "error", message: "Student not valid" });
+      return;
+    }
+
+    // Fetch complete assignment data for each assignment ID
+    const populatedAssignments = await Promise.all(
+      student.uploadedAssignments.map(async (assignment) => {
+        const assignmentDocument = await Assignment.findById(assignment._id);
+        return assignmentDocument.toObject();
+      })
+    );
+
+    // Remove the assignment with the matching title from the list of assignments
+    const modifiedStudentAssignments = populatedAssignments.filter(
+      (assignment) => assignment.title !== req.params.title
+    );
+
+    // Update the student's uploadedAssignments property with the modified list of assignments
+    student.uploadedAssignments = modifiedStudentAssignments;
+    await student.save();
+
+    // Remove the user access from the assignment by setting uploadedByUser to null
+    const assignment = await Assignment.findOne({ title: req.params.title });
+    assignment.uploadedByUser = null;
+    await assignment.save();
+
+    // Send a success response with status code 201
+    res.status(201).json({ status: "OK" });
+  } catch (error) {
+    res.status(400).json({ error: error });
+  }
 };
 
 const updateAssignment = async (req, res) => {
@@ -267,6 +318,14 @@ const deleteAssignmentSolution = async (req, res) => {
 
 const updateAssignmentSolution = async (req, res) => {
   res.end("Update AssignmentSolution Paper");
+};
+
+const requestAssignment = async (req, res) => {
+  res.end("Request Assignment route");
+};
+
+const requestAssignmentSolution = async (req, res) => {
+  res.end("Request Assignment Solution route");
 };
 
 module.exports = {

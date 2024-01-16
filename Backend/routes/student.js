@@ -35,45 +35,44 @@ router.get(
   "/assignment/:courseID/:title",
   studentAssignmentController.getAssignment
 );
-
+/*DONE*/
 router.post(
   "/assignmentSolution/:courseID/:title",
   upload.single("assignmentSolution"),
   (req, res) =>
     studentAssignmentController.uploadAssignmentSolution(req, res, storage)
 );
-
+/*DONE*/
 router.get(
   "/assignmentSolution/:courseID/:title",
   studentAssignmentController.getAssignmentSolution
 );
 
-router.post(
-  "/assignment/:courseID",
-  studentAssignmentController.requestAssignment
-);
-
 router.delete(
-  "/assignment/:courseID/:assignmentId",
+  "/assignment/:courseID/:title",
   studentAssignmentController.deleteAssignment
 );
-router.patch(
-  "/assignment/:courseID/:assignmentId",
-  studentAssignmentController.updateAssignment
-);
-
-router.post(
-  "/assignmentSolution/:courseID",
-  studentAssignmentController.requestAssignmentSolution
-);
 
 router.delete(
-  "/assignmentSolution/:courseID/:assignmentId",
+  "/assignmentSolution/:courseID/:title",
   studentAssignmentController.deleteAssignmentSolution
 );
 router.patch(
   "/assignmentSolution/:courseID/:assignmentId",
   studentAssignmentController.updateAssignmentSolution
+);
+
+router.patch(
+  "/assignment/:courseID/:assignmentId",
+  studentAssignmentController.updateAssignment
+);
+router.post(
+  "/assignment/:courseID",
+  studentAssignmentController.requestAssignment
+);
+router.post(
+  "/assignmentSolution/:courseID",
+  studentAssignmentController.requestAssignmentSolution
 );
 
 /*  ************************** ASSIGNMENTS **************************   */

@@ -10,11 +10,11 @@ const assignmentSchema = new mongoose.Schema({
   fileType: {
     type: String,
   },
-  // uploadedByUser: {
-  //   type: mongoose.Types.ObjectId,
-  //   ref: "Student", 
-  //   required: true,
-  // },
+  uploadedByUser: {
+    type: mongoose.Types.ObjectId,
+    ref: "Student", 
+    required: false,
+  },
   // instructor: {
   //   type: [String],
   // },
