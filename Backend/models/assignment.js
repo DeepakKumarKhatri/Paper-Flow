@@ -22,14 +22,14 @@ const assignmentSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  // assignmentSolutions: [
-  //   {
-  //     assignmentSolution: {
-  //       type: mongoose.Types.ObjectId,
-  //       ref: "MaterialSolution",
-  //     },
-  //   },
-  // ],
+  assignmentSolutions: [
+    {
+      assignmentSolution: {
+        type: mongoose.Types.ObjectId,
+        ref: "MaterialSolution",
+      },
+    },
+  ],
 });
 
 const Assignment = mongoose.model("Assignment", assignmentSchema);

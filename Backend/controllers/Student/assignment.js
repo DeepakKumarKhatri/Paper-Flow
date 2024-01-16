@@ -1,6 +1,8 @@
 const Assignment = require("../../models/assignment");
 const Course = require("../../models/course");
 const formatDateNow = require("../../helpers/formattedDate");
+const MaterialSolution = require("../../models/materialSolution");
+const mongoose = require("mongoose");
 
 const {
   ref,
@@ -105,8 +107,142 @@ const getAssignment = async (req, res) => {
   }
 };
 
+const uploadAssignmentSolution = async (req, res, storage) => {
+  try {
+    const course = await Course.findOne({ courseCode: req.params.courseID });
+
+    if (!course) {
+      res.json({ status: "error", message: "Course not found" });
+      return;
+    }
+
+    // Fetch complete assignment data for each assignment ID
+    const populatedAssignments = await Promise.all(
+      course.assignments.map(async (assignment) => {
+        const assignmentDocument = await Assignment.findById(assignment._id);
+        return assignmentDocument.toObject();
+      })
+    );
+
+    // Find the assignment with the specified title
+    const assignmentToUpdate = populatedAssignments.find(
+      (assignment) => assignment.title === req.params.title
+    );
+
+    if (!assignmentToUpdate) {
+      res.json({
+        status: "error",
+        message: "Assignment not found for this course",
+      });
+      return;
+    }
+
+    /* PUSH SOLUTION FILE TO SERVER */
+    const fileName = Date.now() + "_" + req.file.originalname + "_Solution";
+
+    const storageRef = ref(storage, `Assignments/${fileName}`);
+
+    // Create file metadata including the content type
+    const metadata = {
+      contentType: req.file.mimetype,
+    };
+
+    // Upload the file in the bucket storage
+    const snapshot = await uploadBytesResumable(
+      storageRef,
+      req.file.buffer,
+      metadata
+    );
+
+    // Grab the public url
+    const downloadURL = await getDownloadURL(snapshot.ref);
+
+    /* PUSH SOLUTION FILE TO SERVER */
+
+    const assignmentFind = await Assignment.findOne({
+      title: req.params.title,
+    });
+
+    // Ensure the 'assignmentsSolution' array is initialized before pushing
+    if (!assignmentFind.assignmentSolutions) {
+      assignmentFind.assignmentSolutions = [];
+    }
+
+    // Use the same _id for both AssignmentSolution and MaterialSolution
+    const solutionId = new mongoose.Types.ObjectId();
+
+    const dataToSave = {
+      _id: solutionId,
+      url: downloadURL,
+      solutionFileName: fileName,
+    };
+
+    assignmentFind.assignmentSolutions.push(dataToSave);
+
+    // Create the assignmentSolution in MaterialSolution Entity with the same _id
+    await MaterialSolution.create(dataToSave);
+
+    // Save the assignment
+    await assignmentFind.save();
+
+    res.status(201).json({ status: "OK" });
+  } catch (error) {
+    return res.status(400).send(error.message);
+  }
+};
+
 const getAssignmentSolution = async (req, res) => {
-  res.end("getAssignmentSolution");
+  try {
+    const course = await Course.findOne({ courseCode: req.params.courseID });
+
+    if (!course) {
+      res.json({ status: "error", message: "Course not found" });
+      return;
+    }
+
+    // Fetch complete assignment data for each assignment ID
+    const populatedAssignments = await Promise.all(
+      course.assignments.map(async (assignment) => {
+        const assignmentDocument = await Assignment.findById(assignment._id);
+        return assignmentDocument.toObject();
+      })
+    );
+
+    // Find the assignment with the specified title
+    const assignmentToUpdate = populatedAssignments.find(
+      (assignment) => assignment.title === req.params.title
+    );
+
+    if (!assignmentToUpdate) {
+      res.json({
+        status: "error",
+        message: "Assignment not found for this course",
+      });
+      return;
+    }
+
+    const assignmentFind = await Assignment.findOne({
+      title: req.params.title,
+    });
+
+    console.log(assignmentFind);
+
+    // Fetch complete assignment data for each assignment ID
+    const assignmentSolution = await Promise.all(
+      assignmentFind.assignmentSolutions.map(async (assignmentSol) => {
+        console.log("DEMO::::: " + assignmentSol);
+        const assignmentSolutionDocument = await MaterialSolution.findById(
+          assignmentSol._id
+        );
+        console.log("DEMO 222::::: " + assignmentSolutionDocument);
+        return assignmentSolutionDocument.toObject();
+      })
+    );
+
+    res.status(201).json({ data: assignmentSolution });
+  } catch (error) {
+    return res.status(400).send(error.message);
+  }
 };
 
 const requestAssignment = async (req, res) => {
@@ -115,10 +251,6 @@ const requestAssignment = async (req, res) => {
 
 const requestAssignmentSolution = async (req, res) => {
   res.end("Request Assignment Solution route");
-};
-
-const uploadAssignmentSolution = async (req, res) => {
-  res.end("Upload Assignment Solution");
 };
 
 const deleteAssignment = async (req, res) => {

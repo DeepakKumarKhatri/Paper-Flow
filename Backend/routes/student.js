@@ -17,29 +17,36 @@ const storage = getStorage();
 // Setting up multer as a middleware to grab file uploads
 const upload = multer({ storage: multer.memoryStorage() });
 
+/*  ************************** ASSIGNMENTS **************************   */
+
+/*DONE*/
 router.get("/", studentPastPaperController.studentDashboad);
+/*DONE*/
 router.post("/assignment/:courseID", upload.single("assignment"), (req, res) =>
   studentAssignmentController.uploadAssignment(req, res, storage)
 );
+/*DONE*/
 router.get(
   "/assignments/:courseID",
   studentAssignmentController.allAssignments
 );
+/*DONE*/
 router.get(
   "/assignment/:courseID/:title",
   studentAssignmentController.getAssignment
 );
 
-router.get(
-  "/assignmentSolution/:courseID/:assignmentId",
-  studentAssignmentController.getAssignmentSolution
+router.post(
+  "/assignmentSolution/:courseID/:title",
+  upload.single("assignmentSolution"),
+  (req, res) =>
+    studentAssignmentController.uploadAssignmentSolution(req, res, storage)
 );
 
-router.get("/pastPapers/:courseID", studentPastPaperController.allPastPaper);
-router.get("/pastPaper/:courseID/:year", studentPastPaperController.getPastPaper);
-
-router.get("/quizzes/:courseID", studentQuizController.allQuizzes);
-router.get("/quiz/:courseID/:quizId", studentQuizController.getQuiz);
+router.get(
+  "/assignmentSolution/:courseID/:title",
+  studentAssignmentController.getAssignmentSolution
+);
 
 router.post(
   "/assignment/:courseID",
@@ -59,10 +66,7 @@ router.post(
   "/assignmentSolution/:courseID",
   studentAssignmentController.requestAssignmentSolution
 );
-router.post(
-  "/assignmentSolution/:courseID/:assignmentId",
-  studentAssignmentController.uploadAssignmentSolution
-);
+
 router.delete(
   "/assignmentSolution/:courseID/:assignmentId",
   studentAssignmentController.deleteAssignmentSolution
@@ -72,10 +76,33 @@ router.patch(
   studentAssignmentController.updateAssignmentSolution
 );
 
-router.post("/pastPaper/:courseID", studentPastPaperController.requestPastPaper);
-router.post("/pastPaper/:courseID/:year", studentPastPaperController.uploadPastPaper);
-router.delete("/pastPaper/:courseID/:year", studentPastPaperController.deletePastPaper);
-router.patch("/pastPaper/:courseID/:year", studentPastPaperController.updatePastPaper);
+/*  ************************** ASSIGNMENTS **************************   */
+
+router.get("/pastPapers/:courseID", studentPastPaperController.allPastPaper);
+router.get(
+  "/pastPaper/:courseID/:year",
+  studentPastPaperController.getPastPaper
+);
+
+router.get("/quizzes/:courseID", studentQuizController.allQuizzes);
+router.get("/quiz/:courseID/:quizId", studentQuizController.getQuiz);
+
+router.post(
+  "/pastPaper/:courseID",
+  studentPastPaperController.requestPastPaper
+);
+router.post(
+  "/pastPaper/:courseID/:year",
+  studentPastPaperController.uploadPastPaper
+);
+router.delete(
+  "/pastPaper/:courseID/:year",
+  studentPastPaperController.deletePastPaper
+);
+router.patch(
+  "/pastPaper/:courseID/:year",
+  studentPastPaperController.updatePastPaper
+);
 
 router.post("/quiz/:courseID", studentQuizController.requestQuiz);
 router.post("/quiz/:courseID/:quizId", studentQuizController.uploadQuiz);
