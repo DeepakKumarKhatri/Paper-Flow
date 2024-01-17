@@ -15,9 +15,9 @@ const assignmentSchema = new mongoose.Schema({
     ref: "Student", 
     required: false,
   },
-  // instructor: {
-  //   type: [String],
-  // },
+  instructor: {
+    type: String,
+  },
   url:{
     type: String,
     required: true,

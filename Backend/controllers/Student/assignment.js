@@ -14,6 +14,7 @@ const {
 const uploadAssignment = async (req, res, storage) => {
   try {
     const studentEmail = req.body.studentEmail;
+    const instructor = req.body.instructor;
     const student = await Student.findOne({ email: studentEmail });
     if (!student) {
       res.json({ status: "error", message: "Student not valid" });
@@ -50,7 +51,7 @@ const uploadAssignment = async (req, res, storage) => {
       assignmentDate: formatDateNow(),
       fileType: req.file.mimetype,
       uploadedByUser: student._id,
-      // instructor: req.body.instructor,
+      instructor: instructor,
       assignmentSolutions: [],
       url: downloadURL,
     });
@@ -88,9 +89,10 @@ const allAssignments = async (req, res) => {
     }
     let response = [];
     course.assignments.map((assignment) => response.push(assignment));
-    console.log(response);
-
-    res.send({ data: response });
+    const jsonResponse1 = { message: "NO DATA FOUND" };
+    const jsonResponse2 = { data: response };
+    const jsonResponse = response.length === 0 ? jsonResponse1 : jsonResponse2;
+    res.send({ jsonResponse });
   } catch (error) {
     res.send({ message: error });
   }
