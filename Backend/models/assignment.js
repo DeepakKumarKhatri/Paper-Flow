@@ -22,6 +22,10 @@ const assignmentSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  approvedByAdmin: {
+    type: Boolean,
+    default: false,
+  },
   assignmentSolutions: [
     {
       assignmentSolution: {

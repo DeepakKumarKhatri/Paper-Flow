@@ -4,11 +4,11 @@ const formatDateNow = require("../../helpers/formattedDate");
 const MaterialSolution = require("../../models/materialSolution");
 const mongoose = require("mongoose");
 const Student = require("../../models/student");
-
 const {
   ref,
   getDownloadURL,
   uploadBytesResumable,
+  deleteObject,
 } = require("firebase/storage");
 
 const uploadAssignment = async (req, res, storage) => {
@@ -269,11 +269,9 @@ const getAssignmentSolution = async (req, res) => {
 const deleteAssignment = async (req, res) => {
   try {
     const { studentEmail } = req.body;
-    console.log(studentEmail);
 
     // Find the student document using the email
     const student = await Student.findOne({ email: studentEmail });
-    console.log(student);
 
     if (!student) {
       // If the student is not valid, send an error response and return
@@ -310,8 +308,95 @@ const deleteAssignment = async (req, res) => {
   }
 };
 
-const updateAssignment = async (req, res) => {
-  res.end("Update Assignment Past Paper");
+/**
+ * User will only be allowed to update the assignment document, instructor name and title
+ */
+const updateAssignment = async (req, res, storage) => {
+  try {
+    const course = await Course.findOne({ courseCode: req.params.courseID });
+    if (!course) {
+      res.status(404).json({ status: "error", message: "Course not found" });
+      return;
+    }
+
+    const populatedAssignments = await Promise.all(
+      course.assignments.map(async (assignment) => {
+        const assignmentDocument = await Assignment.findById(assignment._id);
+        return assignmentDocument.toObject();
+      })
+    );
+
+    const assignmentToUpdate = populatedAssignments.find(
+      (assignment) => assignment.title === req.params.title
+    );
+
+    if (!assignmentToUpdate) {
+      res.status(404).json({
+        status: "error",
+        message: "Assignment not found for this course",
+      });
+      return;
+    }
+
+    const assignmentFind = await Assignment.findOne({
+      title: req.params.title,
+    });
+
+    /* NOW DELETE THE PREVIOUS DOCUMENT FROM SERVER */
+
+    // Extracting the filename from the URL
+    const urlParts = assignmentFind.url.split("/");
+    const fileNameWithParams = decodeURIComponent(
+      urlParts[urlParts.length - 1]
+    );
+    const fileName = fileNameWithParams.split("?")[0]; // Exclude query parameters
+
+    // Create a reference to the file in Firebase Storage
+    const storageRef = ref(storage, fileName);
+
+    // Delete the file
+    await deleteObject(storageRef);
+
+    /* NOW DELETE THE PREVIOUS DOCUMENT FROM SERVER */
+
+    /* ADD NEW DOCUMENT THEN UPDATE THE ASSIGNMENT OBJECT WITH NEW PROPERTIES */
+
+    const newFileName = Date.now() + "_" + req.file.originalname;
+
+    const newStorageRef = ref(storage, `Assignments/${newFileName}`);
+
+    // Create file metadata including the content type
+    const metadata = {
+      contentType: req.file.mimetype,
+    };
+
+    // Upload the file in the bucket storage
+    const snapshot = await uploadBytesResumable(
+      newStorageRef,
+      req.file.buffer,
+      metadata
+    );
+
+    // Grab the public url
+    const downloadURL = await getDownloadURL(snapshot.ref);
+    // Update the assignment object with new properties
+    await Assignment.findOneAndUpdate(
+      { title: req.params.title },
+      {
+        title: newFileName,
+        assignmentDate: formatDateNow(),
+        instructor: req.body.instructor,
+        url: downloadURL,
+      }
+    );
+
+    /* ADD NEW DOCUMENT THEN UPDATE THE ASSIGNMENT OBJECT WITH NEW PROPERTIES */
+
+    res.status(200).json({ status: "OK" });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ error: "Erorr hoon mein bhaii" });
+  }
 };
 
 const deleteAssignmentSolution = async (req, res) => {
