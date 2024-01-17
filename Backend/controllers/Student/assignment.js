@@ -387,6 +387,7 @@ const updateAssignment = async (req, res, storage) => {
         assignmentDate: formatDateNow(),
         instructor: req.body.instructor,
         url: downloadURL,
+        approvedByAdmin: false,
       }
     );
 
@@ -394,17 +395,138 @@ const updateAssignment = async (req, res, storage) => {
 
     res.status(200).json({ status: "OK" });
   } catch (error) {
-    console.log(error);
-    res.status(400).json({ error: "Erorr hoon mein bhaii" });
+    res.status(400).json({ error: "Error" });
   }
 };
 
+/* It will require assignmentSolution Title from the user that specific document clicked
+What it needs:
+1) Body -> studentEmail, assignmentSolutionTitle
+*/
 const deleteAssignmentSolution = async (req, res) => {
-  res.end("Delete Assignment Solution Paper");
+  try {
+    const studentEmail = req.body.studentEmail;
+    const student = await Student.findOne({ email: studentEmail });
+    if (!student) {
+      res.json({ status: "error", message: "Student not valid" });
+      return;
+    }
+    const assignmentSolutionTitle = req.body.assignmentSolutionTitle;
+    const uploadedSolutions = await Promise.all(
+      student.uploadedSolutions.map(async (solution) => {
+        const assignmentDocument = await MaterialSolution.findById(
+          solution._id
+        );
+        return assignmentDocument.toObject();
+      })
+    );
+
+    if (!uploadedSolutions) {
+      res
+        .status(404)
+        .json({ status: "error", message: "Assignment solution not found" });
+      return;
+    }
+
+    const updatedSolutions = uploadedSolutions.filter(
+      (element) => element.solutionFileName !== assignmentSolutionTitle
+    );
+
+    student.uploadedSolutions = updatedSolutions;
+
+    await MaterialSolution.findOneAndUpdate(
+      { solutionFileName: assignmentSolutionTitle },
+      { uploadedByUser: null }
+    );
+
+    student.save();
+    res.status(200).json({ status: "OK" });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
 };
 
-const updateAssignmentSolution = async (req, res) => {
-  res.end("Update AssignmentSolution Paper");
+const updateAssignmentSolution = async (req, res, storage) => {
+  try {
+    const studentEmail = req.body.studentEmail;
+    const student = await Student.findOne({ email: studentEmail });
+    if (!student) {
+      res.json({ status: "error", message: "Student not valid" });
+      return;
+    }
+    const assignmentSolutionTitle = req.body.assignmentSolutionTitle;
+    const uploadedSolutions = await Promise.all(
+      student.uploadedSolutions.map(async (solution) => {
+        const assignmentDocument = await MaterialSolution.findById(
+          solution._id
+        );
+        return assignmentDocument.toObject();
+      })
+    );
+
+    if (!uploadedSolutions) {
+      res
+        .status(404)
+        .json({ status: "error", message: "Assignment solution not found" });
+      return;
+    }
+
+    const thatSpecificSolution = uploadedSolutions.filter(
+      (element) => element.solutionFileName === assignmentSolutionTitle
+    );
+
+    /* NOW DELETE THE PREVIOUS DOCUMENT FROM SERVER */
+
+    // Extracting the filename from the URL
+    const urlParts = thatSpecificSolution[0].url.split("/");
+    const fileNameWithParams = decodeURIComponent(
+      urlParts[urlParts.length - 1]
+    );
+    const fileName = fileNameWithParams.split("?")[0]; // Exclude query parameters
+    console.log(fileName);
+    // Create a reference to the file in Firebase Storage
+    const storageRef = ref(storage, fileName);
+
+    // Delete the file
+    await deleteObject(storageRef);
+
+    /* NOW DELETE THE PREVIOUS DOCUMENT FROM SERVER */
+
+    /* ADD NEW DOCUMENT THEN UPDATE THE ASSIGNMENT SOLUTION OBJECT WITH NEW PROPERTIES */
+
+    const newFileName = Date.now() + "_" + req.file.originalname;
+
+    const newStorageRef = ref(storage, `Assignments/${newFileName}`);
+
+    // Create file metadata including the content type
+    const metadata = {
+      contentType: req.file.mimetype,
+    };
+
+    // Upload the file in the bucket storage
+    const snapshot = await uploadBytesResumable(
+      newStorageRef,
+      req.file.buffer,
+      metadata
+    );
+
+    // Grab the public url
+    const downloadURL = await getDownloadURL(snapshot.ref);
+    // Update the assignment object with new properties
+    await MaterialSolution.findOneAndUpdate(
+      { solutionFileName: assignmentSolutionTitle },
+      {
+        solutionFileName: newFileName,
+        url: downloadURL,
+        approvedByAdmin: false,
+      }
+    );
+
+    res.status(200).json({ status: "OK" });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ error: "Error" });
+  }
 };
 
 const requestAssignment = async (req, res) => {

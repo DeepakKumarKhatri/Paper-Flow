@@ -4,7 +4,6 @@ const materialSolutionSchema = new mongoose.Schema({
   uploadedByUser: {
     type: mongoose.Types.ObjectId,
     ref: "Student", 
-    required: true,
   },
   url: {
     type: String,
@@ -13,6 +12,10 @@ const materialSolutionSchema = new mongoose.Schema({
   solutionFileName: {
     type: String,
     required: true,
+  },
+  approvedByAdmin: {
+    type: Boolean,
+    default: false,
   },
 });
 

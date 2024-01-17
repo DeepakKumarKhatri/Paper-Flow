@@ -59,25 +59,30 @@ router.delete(
   studentAssignmentController.deleteAssignment
 );
 
+/*DONE*/
 router.patch(
   "/assignment/:courseID/:title",
   upload.single("assignment"),
   (req, res) => studentAssignmentController.updateAssignment(req, res, storage)
 );
-
+/*DONE*/
 router.delete(
   "/assignmentSolution/:courseID/:title",
   studentAssignmentController.deleteAssignmentSolution
 );
+
 router.patch(
   "/assignmentSolution/:courseID/:assignmentId",
-  studentAssignmentController.updateAssignmentSolution
+  upload.single("assignmentSolution"),
+  (req, res) =>
+    studentAssignmentController.updateAssignmentSolution(req, res, storage)
 );
 
 router.post(
   "/assignment/:courseID",
   studentAssignmentController.requestAssignment
 );
+
 router.post(
   "/assignmentSolution/:courseID",
   studentAssignmentController.requestAssignmentSolution
