@@ -4,6 +4,7 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var cors = require("cors");
+require("dotenv").config();
 
 const { connectMongoDB } = require("./database/connection");
 
@@ -16,9 +17,9 @@ var app = express();
 
 // Connect to MongoDB
 connectMongoDB(
-  // "mongodb+srv://khatrideepak112:JEGoqq3DDHmHzBJt@paper-flow.w0lfxij.mongodb.net/?retryWrites=true&w=majority"
-  // "mongodb+srv://khatrideepak112:73w7t0WCrend4Xi6@cluster0.zeonqsk.mongodb.net/?retryWrites=true&w=majority"
-  "mongodb://127.0.0.1:27017/paper-flow"
+  // process.env.MONGO_REMOTE_URL2
+  // process.env.MONGO_REMOTE_URL1
+  process.env.MONGO_LOCAL_URL
 );
 
 // view engine setup
@@ -30,7 +31,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(cors());
-app.use('/assignments',express.static("assignments"));
+app.use("/assignments", express.static("assignments"));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
