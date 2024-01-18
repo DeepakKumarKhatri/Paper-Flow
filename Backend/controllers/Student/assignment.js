@@ -4,6 +4,8 @@ const formatDateNow = require("../../helpers/formattedDate");
 const MaterialSolution = require("../../models/materialSolution");
 const mongoose = require("mongoose");
 const Student = require("../../models/student");
+const UserRequest = require("../../models/userRequest");
+
 const {
   ref,
   getDownloadURL,
@@ -529,12 +531,44 @@ const updateAssignmentSolution = async (req, res, storage) => {
   }
 };
 
-const requestAssignment = async (req, res) => {
-  res.end("Request Assignment route");
-};
+const doRequest = async (req, res) => {
+  try {
+    const requestType = req.body.requestType;
+    const requestMessage = req.body.requestMessage;
 
-const requestAssignmentSolution = async (req, res) => {
-  res.end("Request Assignment Solution route");
+    const course = await Course.findOne({ courseCode: req.params.courseID });
+    if (!course) {
+      res.status(404).json({ status: "error", message: "Course not found" });
+      return;
+    }
+    const student = await Student.findOne({ email: req.body.studentEmail });
+    if (!student) {
+      res.status(404).json({ status: "error", message: "Student not found" });
+      return;
+    }
+
+    const request = {
+      requestType,
+      requestMessage,
+    };
+
+    await UserRequest.create(request);
+
+    if (!course.userRequests) {
+      course.userRequests = [];
+    }
+    course.userRequests.push(request);
+
+    if (!student.userRequests) {
+      student.userRequests = [];
+    }
+    student.userRequests.push(request);
+
+    course.save();
+    student.save();
+
+    res.status(200).json({ status: "OK" });
+  } catch (error) {}
 };
 
 module.exports = {
@@ -544,8 +578,7 @@ module.exports = {
   updateAssignment,
   deleteAssignment,
   uploadAssignmentSolution,
-  requestAssignmentSolution,
-  requestAssignment,
+  doRequest,
   getAssignmentSolution,
   getAssignment,
   allAssignments,

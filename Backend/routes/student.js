@@ -23,14 +23,14 @@ const upload = multer({ storage: multer.memoryStorage() });
 router.get("/", studentPastPaperController.studentDashboad);
 
 /*DONE*/
-router.post("/assignment/:courseID", upload.single("assignment"), (req, res) =>
-  studentAssignmentController.uploadAssignment(req, res, storage)
-);
-
-/*DONE*/
 router.get(
   "/assignments/:courseID",
   studentAssignmentController.allAssignments
+);
+
+/*DONE*/
+router.post("/assignment/:courseID", upload.single("assignment"), (req, res) =>
+  studentAssignmentController.uploadAssignment(req, res, storage)
 );
 
 /*DONE*/
@@ -70,23 +70,15 @@ router.delete(
   "/assignmentSolution/:courseID/:title",
   studentAssignmentController.deleteAssignmentSolution
 );
-
+/*DONE*/
 router.patch(
   "/assignmentSolution/:courseID/:assignmentId",
   upload.single("assignmentSolution"),
   (req, res) =>
     studentAssignmentController.updateAssignmentSolution(req, res, storage)
 );
-
-router.post(
-  "/assignment/:courseID",
-  studentAssignmentController.requestAssignment
-);
-
-router.post(
-  "/assignmentSolution/:courseID",
-  studentAssignmentController.requestAssignmentSolution
-);
+/*DONE*/
+router.post("/doRequest/:courseID", studentAssignmentController.doRequest);
 
 /*  ************************** ASSIGNMENTS **************************   */
 
