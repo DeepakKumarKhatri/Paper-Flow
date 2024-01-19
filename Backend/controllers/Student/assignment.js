@@ -485,7 +485,6 @@ const updateAssignmentSolution = async (req, res, storage) => {
       urlParts[urlParts.length - 1]
     );
     const fileName = fileNameWithParams.split("?")[0]; // Exclude query parameters
-    console.log(fileName);
     // Create a reference to the file in Firebase Storage
     const storageRef = ref(storage, fileName);
 
@@ -526,7 +525,6 @@ const updateAssignmentSolution = async (req, res, storage) => {
 
     res.status(200).json({ status: "OK" });
   } catch (error) {
-    console.log(error);
     res.status(400).json({ error: "Error" });
   }
 };

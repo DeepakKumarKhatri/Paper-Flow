@@ -180,7 +180,6 @@ const uploadQuizSolution = async (req, res, storage) => {
 
     // Grab the public url
     const downloadURL = await getDownloadURL(snapshot.ref);
-    console.log("downloadURL: " + downloadURL);
     /* PUSH SOLUTION FILE TO SERVER */
 
     // Ensure the 'assignmentsSolution' array is initialized before pushing
@@ -220,7 +219,6 @@ const deleteQuiz = async (req, res) => {
 
     // Find the student document using the email
     const student = await Student.findOne({ email: studentEmail });
-    console.log(student);
 
     if (!student) {
       // If the student is not valid, send an error response and return
@@ -235,14 +233,11 @@ const deleteQuiz = async (req, res) => {
         return assignmentDocument.toObject();
       })
     );
-    console.log(populatedAssignments);
-    console.log("req.params.quizTitle: " + req.params.quizTitle);
 
     // Remove the quiz with the matching title from the list of quizzes
     const modifiedStudentAssignments = populatedAssignments.filter(
       (quiz) => quiz.title !== req.params.quizTitle
     );
-    console.log(modifiedStudentAssignments);
 
     // Update the student's uploaded quiz property with the modified list of assignments
     student.uploadedQuizzes = modifiedStudentAssignments;
@@ -257,7 +252,6 @@ const deleteQuiz = async (req, res) => {
     // Send a success response with status code 201
     res.status(201).json({ status: "OK" });
   } catch (error) {
-    console.log(error);
     res.status(400).json({ error: error });
   }
 };
@@ -431,7 +425,6 @@ const updateQuizSolution = async (req, res, storage) => {
       urlParts[urlParts.length - 1]
     );
     const fileName = fileNameWithParams.split("?")[0]; // Exclude query parameters
-    console.log(fileName);
     // Create a reference to the file in Firebase Storage
     const storageRef = ref(storage, fileName);
 
@@ -472,7 +465,6 @@ const updateQuizSolution = async (req, res, storage) => {
 
     res.status(200).json({ status: "OK" });
   } catch (error) {
-    console.log(error);
     res.status(400).json({ error: "Error" });
   }
 };
