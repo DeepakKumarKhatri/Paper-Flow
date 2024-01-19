@@ -15,6 +15,10 @@ const studentSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    adminControlled: {
+      type: Boolean,
+      default: true,
+    },
     uploadedQuizzes: [
       {
         uploadedQuiz: {
@@ -52,9 +56,17 @@ const studentSchema = new mongoose.Schema(
         userRequest: {
           type: mongoose.Types.ObjectId,
           ref: "UserRequest",
-        }
-      }
-    ]
+        },
+      },
+    ],
+    studentCourses: [
+      {
+        studentCourse: {
+          type: mongoose.Types.ObjectId,
+          ref: "Course",
+        },
+      },
+    ],
   },
   {
     timestamps: true,

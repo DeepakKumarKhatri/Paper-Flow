@@ -13,6 +13,29 @@ const {
   deleteObject,
 } = require("firebase/storage");
 
+const allAssignments = async (req, res) => {
+  try {
+    const course = await Course.findOne({ courseCode: req.params.courseID });
+
+    if (course.length === 0) {
+      res.json({ status: "error", message: "Course not found" });
+      return;
+    }
+
+    if (!course.assignments) {
+      course.assignments = [];
+    }
+    let response = [];
+    course.assignments.map((assignment) => response.push(assignment));
+    const jsonResponse1 = { message: "NO DATA FOUND" };
+    const jsonResponse2 = { data: response };
+    const jsonResponse = response.length === 0 ? jsonResponse1 : jsonResponse2;
+    res.send({ jsonResponse });
+  } catch (error) {
+    res.send({ message: error });
+  }
+};
+
 const uploadAssignment = async (req, res, storage) => {
   try {
     const studentEmail = req.body.studentEmail;
@@ -74,29 +97,6 @@ const uploadAssignment = async (req, res, storage) => {
     res.status(201).json({ status: "OK" });
   } catch (error) {
     return res.status(400).send(error.message);
-  }
-};
-
-const allAssignments = async (req, res) => {
-  try {
-    const course = await Course.findOne({ courseCode: req.params.courseID });
-
-    if (course.length === 0) {
-      res.json({ status: "error", message: "Course not found" });
-      return;
-    }
-
-    if (!course.assignments) {
-      course.assignments = [];
-    }
-    let response = [];
-    course.assignments.map((assignment) => response.push(assignment));
-    const jsonResponse1 = { message: "NO DATA FOUND" };
-    const jsonResponse2 = { data: response };
-    const jsonResponse = response.length === 0 ? jsonResponse1 : jsonResponse2;
-    res.send({ jsonResponse });
-  } catch (error) {
-    res.send({ message: error });
   }
 };
 
