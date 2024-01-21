@@ -315,7 +315,6 @@ const uploadPastPaperSolution = async (req, res, storage) => {
       })
       .exec();
 
-    // console.log(populatedPastPapers);
     // Find the quiz with the specified title
     const pastPaperToUpdate = populatedPastPapers.find(
       (pastPaper) => pastPaper.title === req.params.title
@@ -328,7 +327,6 @@ const uploadPastPaperSolution = async (req, res, storage) => {
       });
       return;
     }
-    console.log(pastPaperToUpdate);
 
     /* PUSH SOLUTION FILE TO SERVER */
     const fileName = Date.now() + "_" + req.file.originalname + "_Solution";
@@ -485,13 +483,10 @@ const deletePastPaperSolution = async (req, res) => {
         .json({ status: "error", message: "PastPaper solution not found" });
       return;
     }
-    console.log(pastPaperSolutionTitle)
-    console.log(uploadedSolutions);
 
     const updatedSolutions = uploadedSolutions.filter(
       (element) => element.solutionFileName !== pastPaperSolutionTitle
     );
-    console.log(updatedSolutions);
 
     student.uploadedSolutions = updatedSolutions;
 
