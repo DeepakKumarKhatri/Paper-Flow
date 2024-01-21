@@ -4,19 +4,27 @@ const pastPaperSchema = new mongoose.Schema(
   {
     title: {
       type: String,
-      required: true,
     },
-    pastPaperDate: {
+    semester: {
+      type: String,
+    },
+    fileType: {
+      type: String,
+    },
+    url: {
       type: String,
       required: true,
     },
     uploadedByUser: {
       type: mongoose.Types.ObjectId,
       ref: "Student",
-      required: true,
     },
     instructor: {
       type: [String],
+    },
+    approvedByAdmin: {
+      type: Boolean,
+      default: false,
     },
     pastPaperSolutions: [
       {

@@ -120,26 +120,27 @@ router.patch(
 
 /*  ************************** PAST-PAPER START **************************   */
 
-router.get("/pastPapers/:courseID", studentPastPaperController.allPastPaper);
-router.get(
-  "/pastPaper/:courseID/:year",
-  studentPastPaperController.getPastPaper
-);
+/*DONE*/
 router.post(
-  "/pastPaper/:courseID",
-  studentPastPaperController.requestPastPaper
+  "/pastPaper/:courseID/:semester",
+  upload.single("pastpaper"),
+  (req, res) => studentPastPaperController.uploadPastPaper(req, res, storage)
 );
-router.post(
-  "/pastPaper/:courseID/:year",
-  studentPastPaperController.uploadPastPaper
-);
+
+/*DONE*/
 router.delete(
-  "/pastPaper/:courseID/:year",
+  "/pastPaper/:courseID",
   studentPastPaperController.deletePastPaper
 );
-router.patch(
-  "/pastPaper/:courseID/:year",
-  studentPastPaperController.updatePastPaper
+/*DONE*/
+router.patch("/pastPaper/:courseID", upload.single("pastPaper"), (req, res) =>
+  studentPastPaperController.updatePastPaper(req, res, storage)
+);
+/*DONE*/
+router.get("/pastPapers/:courseID", studentPastPaperController.allPastPaper);
+router.get(
+  "/pastPaper/:courseID/:title",
+  studentPastPaperController.getPastPaper
 );
 
 /*  ************************** PAST-PAPER END **************************   */
