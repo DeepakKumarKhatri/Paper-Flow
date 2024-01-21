@@ -138,9 +138,29 @@ router.patch("/pastPaper/:courseID", upload.single("pastPaper"), (req, res) =>
 );
 /*DONE*/
 router.get("/pastPapers/:courseID", studentPastPaperController.allPastPaper);
+/*DONE*/
 router.get(
   "/pastPaper/:courseID/:title",
   studentPastPaperController.getPastPaper
+);
+/*DONE*/
+router.post(
+  "/pastPaperSolution/:courseID/:title",
+  upload.single("pastPaperSolution"),
+  (req, res) =>
+    studentPastPaperController.uploadPastPaperSolution(req, res, storage)
+);
+/*DONE*/
+router.patch(
+  "/pastPaperSolution/:courseID/:title",
+  upload.single("pastPaperSolution"),
+  (req, res) =>
+    studentPastPaperController.updatePastPaperSolution(req, res, storage)
+);
+
+router.delete(
+  "/pastPaperSolution/:courseID/:title",
+  studentPastPaperController.deletePastPaperSolution
 );
 
 /*  ************************** PAST-PAPER END **************************   */

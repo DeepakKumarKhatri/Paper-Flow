@@ -11,6 +11,10 @@ const {
   deleteObject,
 } = require("firebase/storage");
 
+const studentDashboad = async (req, res) => {
+  res.end("Welcome Student Dashboad");
+};
+
 const uploadPastPaper = async (req, res, storage) => {
   try {
     const studentEmail = req.body.studentEmail;
@@ -283,8 +287,224 @@ const getPastPaper = async (req, res) => {
   }
 };
 
-const studentDashboad = async (req, res) => {
-  res.end("Welcome Student Dashboad");
+const uploadPastPaperSolution = async (req, res, storage) => {
+  try {
+    const studentEmail = req.body.studentEmail;
+    const student = await Student.findOne({ email: studentEmail });
+    if (!student) {
+      res.json({ status: "error", message: "Student not valid" });
+      return;
+    }
+
+    const course = await Course.findOne({ courseCode: req.params.courseID });
+    if (!course) {
+      res.json({ status: "error", message: "Course not found" });
+      return;
+    }
+
+    // Fetch complete assignment data for each assignment ID
+    const populatedPastPapers = await PastPaper.find({
+      _id: { $in: course.pastPapers },
+    })
+      .populate({
+        path: "pastPaperSolutions",
+        populate: {
+          path: "uploadedByUser",
+          model: "Student",
+        },
+      })
+      .exec();
+
+    // console.log(populatedPastPapers);
+    // Find the quiz with the specified title
+    const pastPaperToUpdate = populatedPastPapers.find(
+      (pastPaper) => pastPaper.title === req.params.title
+    );
+
+    if (!pastPaperToUpdate) {
+      res.json({
+        status: "error",
+        message: "PastPaper not found for this course",
+      });
+      return;
+    }
+    console.log(pastPaperToUpdate);
+
+    /* PUSH SOLUTION FILE TO SERVER */
+    const fileName = Date.now() + "_" + req.file.originalname + "_Solution";
+
+    const storageRef = ref(storage, `PastPapers/${fileName}`);
+
+    // Create file metadata including the content type
+    const metadata = {
+      contentType: req.file.mimetype,
+    };
+
+    // Upload the file in the bucket storage
+    const snapshot = await uploadBytesResumable(
+      storageRef,
+      req.file.buffer,
+      metadata
+    );
+
+    // Grab the public url
+    const downloadURL = await getDownloadURL(snapshot.ref);
+    /* PUSH SOLUTION FILE TO SERVER */
+
+    // Ensure the 'assignmentsSolution' array is initialized before pushing
+    if (!pastPaperToUpdate.pastPaperSolutions) {
+      pastPaperToUpdate.pastPaperSolutions = [];
+    }
+
+    // Use the same _id for both AssignmentSolution and MaterialSolution
+    const solutionId = new mongoose.Types.ObjectId();
+
+    const dataToSave = {
+      _id: solutionId,
+      url: downloadURL,
+      solutionFileName: fileName,
+      uploadedByUser: student._id,
+    };
+
+    pastPaperToUpdate.pastPaperSolutions.push(dataToSave);
+    student.uploadedSolutions.push(dataToSave);
+
+    // Create the assignmentSolution in MaterialSolution Entity with the same _id
+    await MaterialSolution.create(dataToSave);
+
+    // Save the assignment and student
+    await pastPaperToUpdate.save();
+    await student.save();
+
+    res.status(201).json({ status: "OK" });
+  } catch (error) {
+    return res.status(400).send(error.message);
+  }
+};
+
+const updatePastPaperSolution = async (req, res, storage) => {
+  try {
+    const studentEmail = req.body.studentEmail;
+    const student = await Student.findOne({ email: studentEmail });
+    if (!student) {
+      res.json({ status: "error", message: "Student not valid" });
+      return;
+    }
+    const pastPaperSolutionTitle = req.body.pastPaperSolutionTitle;
+    const uploadedSolutions = await Promise.all(
+      student.uploadedSolutions.map(async (solution) => {
+        const assignmentDocument = await MaterialSolution.findById(
+          solution._id
+        );
+        return assignmentDocument.toObject();
+      })
+    );
+
+    if (!uploadedSolutions) {
+      res
+        .status(404)
+        .json({ status: "error", message: "Quiz solution not found" });
+      return;
+    }
+
+    const thatSpecificSolution = uploadedSolutions.filter(
+      (element) => element.solutionFileName === pastPaperSolutionTitle
+    );
+
+    /* NOW DELETE THE PREVIOUS DOCUMENT FROM SERVER */
+
+    // Extracting the filename from the URL
+    const urlParts = thatSpecificSolution[0].url.split("/");
+    const fileNameWithParams = decodeURIComponent(
+      urlParts[urlParts.length - 1]
+    );
+    const fileName = fileNameWithParams.split("?")[0]; // Exclude query parameters
+    // Create a reference to the file in Firebase Storage
+    const storageRef = ref(storage, fileName);
+
+    // Delete the file
+    await deleteObject(storageRef);
+
+    /* NOW DELETE THE PREVIOUS DOCUMENT FROM SERVER */
+
+    /* ADD NEW DOCUMENT THEN UPDATE THE ASSIGNMENT SOLUTION OBJECT WITH NEW PROPERTIES */
+
+    const newFileName = Date.now() + "_" + req.file.originalname;
+
+    const newStorageRef = ref(storage, `PastPapers/${newFileName}`);
+
+    // Create file metadata including the content type
+    const metadata = {
+      contentType: req.file.mimetype,
+    };
+
+    // Upload the file in the bucket storage
+    const snapshot = await uploadBytesResumable(
+      newStorageRef,
+      req.file.buffer,
+      metadata
+    );
+
+    // Grab the public url
+    const downloadURL = await getDownloadURL(snapshot.ref);
+    // Update the assignment object with new properties
+    await MaterialSolution.findOneAndUpdate(
+      { solutionFileName: pastPaperSolutionTitle },
+      {
+        solutionFileName: newFileName,
+        url: downloadURL,
+        approvedByAdmin: false,
+      }
+    );
+
+    res.status(200).json({ status: "OK" });
+  } catch (error) {
+    res.status(400).json({ error: "Error" });
+  }
+};
+
+const deletePastPaperSolution = async (req, res) => {
+  try {
+    const studentEmail = req.body.studentEmail;
+    const student = await Student.findOne({ email: studentEmail });
+    if (!student) {
+      res.json({ status: "error", message: "Student not valid" });
+      return;
+    }
+    const pastPaperSolutionTitle = req.body.pastPaperSolutionTitle;
+    const uploadedSolutions = await Promise.all(
+      student.uploadedSolutions.map(async (solution) => {
+        const quizDocument = await MaterialSolution.findById(solution._id);
+        return quizDocument.toObject();
+      })
+    );
+
+    if (!uploadedSolutions) {
+      res
+        .status(404)
+        .json({ status: "error", message: "PastPaper solution not found" });
+      return;
+    }
+    console.log(pastPaperSolutionTitle)
+    console.log(uploadedSolutions);
+
+    const updatedSolutions = uploadedSolutions.filter(
+      (element) => element.solutionFileName !== pastPaperSolutionTitle
+    );
+    console.log(updatedSolutions);
+
+    student.uploadedSolutions = updatedSolutions;
+
+    const response = await MaterialSolution.findOneAndUpdate(
+      { solutionFileName: pastPaperSolutionTitle },
+      { uploadedByUser: null }
+    );
+
+    student.save();
+    res.status(200).json({ status: "OK" });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
 };
 
 module.exports = {
@@ -294,4 +514,7 @@ module.exports = {
   deletePastPaper,
   allPastPaper,
   getPastPaper,
+  uploadPastPaperSolution,
+  deletePastPaperSolution,
+  updatePastPaperSolution,
 };
