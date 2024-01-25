@@ -13,7 +13,8 @@ router.get("/quizzes/:courseID", adminQuizController.allQuizzes);
 
 router.delete("/assignment/:courseID/:assignmentId", adminAssignmentController.deleteAssignment);
 router.delete("/assignmentSolution/:courseID/:assignmentId", adminAssignmentController.deleteAssignmentSolution);
-router.delete("/pastPaper/:courseID/:year", adminPastPaperController.deletePastPaper);
+router.delete("/pastPaper/:courseID/:year", adminPastPaperController.deletePastPaperForUser);
+router.delete("/pastPaper/server/:courseID/:year", adminPastPaperController.deletePastPaperFromServer);
 
 router.delete("/quiz/:courseID/:quizId", adminQuizController.deleteQuiz);
 router.delete("/quizSolution/:courseID/:quizId", adminQuizController.deleteQuizSolution);
@@ -26,6 +27,8 @@ router.get("/unapprovedAssignmentSolutions", adminAssignmentController.unapprove
 router.get("/unapprovedPastPapers", adminPastPaperController.unapprovedPastPapers);
 router.get("/unapprovedQuizzes", adminQuizController.unapprovedQuizzes);
 router.get("/unapprovedQuizzesSolutions", adminQuizController.unapprovedQuizzesSolutions);
+
+router.patch("/approvePastPaper/:title", adminPastPaperController.approvePastPaper);
 
 router.post("/addAssignment/:id", adminAssignmentController.addAssignment);
 router.post("/addAssignmentSolution/:id", adminAssignmentController.addAssignmentSolution);
