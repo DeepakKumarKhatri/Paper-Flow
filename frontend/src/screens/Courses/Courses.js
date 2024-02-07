@@ -37,6 +37,18 @@ const Courses = () => {
     };
   };
 
+  const getPastPapers = async (courseID) => {
+    const data = await fetch(
+      `http://localhost:8000/student/pastPapers/${courseID}`
+    );
+    const json = await data.json();
+    return {
+      courseID: json.data.courseCode,
+      courseName: json.data.courseName,
+      pastPapers: json.data,
+    };
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       const courses = await getUserCourses();
@@ -46,6 +58,7 @@ const Courses = () => {
           courseName: course.courseName,
           assignments: await getAssignments(course._id),
           quizzes: await getQuizzes(course._id),
+          pastPapers: await getPastPapers(course._id),
         }))
       );
       setCourseAssignments(assignmentData);
@@ -58,7 +71,7 @@ const Courses = () => {
     <div>
       <h1 className={styles["courses-heading"]}>YOUR COURSES</h1>
       {courseAssignments.map(
-        ({ courseID, courseName, assignments, quizzes }) => (
+        ({ courseID, courseName, assignments, quizzes, pastPapers }) => (
           <div className={styles["main-container"]} key={courseID}>
             <h2 className={styles["course-id"]}>
               Course: {courseID} {courseName}
@@ -78,6 +91,14 @@ const Courses = () => {
                   styles={styles}
                   key={quiz._id}
                   cardType={"Quiz"}
+                />
+              ))}
+              {pastPapers.pastPapers.map((pastPaper) => (
+                <AQP_Card
+                  assignment={pastPaper}
+                  styles={styles}
+                  key={pastPaper._id}
+                  cardType={"Past-Paper"}
                 />
               ))}
             </div>

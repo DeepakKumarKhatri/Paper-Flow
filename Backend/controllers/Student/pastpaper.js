@@ -225,7 +225,7 @@ const updatePastPaper = async (req, res, storage) => {
 
 const allPastPaper = async (req, res) => {
   try {
-    const course = await Course.findOne({ courseCode: req.params.courseID });
+    const course = await Course.findOne({ _id: req.params.courseID });
     if (!course) {
       res.status(404).json({ status: "error", message: "Course not found" });
       return;
