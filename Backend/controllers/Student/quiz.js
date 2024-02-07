@@ -78,26 +78,29 @@ const uploadQuiz = async (req, res, storage) => {
 
 const allQuizzes = async (req, res) => {
   try {
-    const course = await Course.findOne({ courseCode: req.params.courseID });
+    const course = await Course.findOne({ _id: req.params.courseID });
 
-    if (course.length === 0) {
-      res.json({ status: "error", message: "Course not found" });
-      return;
+    if (!course) {
+      return res
+        .status(404)
+        .json({ status: "error", message: "Course not found" });
     }
 
-    if (!course.quizzes) {
-      course.quizzes = [];
+    let quizzes = await Quiz.find({
+      _id: { $in: course.quizzes },
+    });
+
+    if (quizzes.length === 0) {
+      return res.json({ message: "NO DATA FOUND", data: [] });
     }
-    let response = [];
-    course.quizzes.map((quiz) => response.push(quiz));
-    const jsonResponse1 = { message: "NO DATA FOUND" };
-    const jsonResponse2 = { data: response };
-    const jsonResponse = response.length === 0 ? jsonResponse1 : jsonResponse2;
-    res.send({ jsonResponse });
+
+    res.setHeader("Content-Disposition", "inline");
+    res.json({ data: quizzes });
   } catch (error) {
-    res.send({ message: error });
+    res.status(500).json({ message: error.message });
   }
 };
+
 
 const getQuiz = async (req, res) => {
   try {
