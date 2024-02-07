@@ -77,36 +77,55 @@ const Courses = () => {
               Course: {courseID} {courseName}
             </h2>
             <div className={styles["all-container"]}>
-              {assignments.assignments.map((assignment) => (
-                <AQP_Card
-                  assignment={assignment}
-                  styles={styles}
-                  cardType={"Assignment"}
-                  key={assignment._id}
-                />
-              ))}
-              {quizzes.quizzes.map((quiz) => (
-                <AQP_Card
-                  assignment={quiz}
-                  styles={styles}
-                  key={quiz._id}
-                  cardType={"Quiz"}
-                />
-              ))}
-              {pastPapers.pastPapers.map((pastPaper) => (
-                <AQP_Card
-                  assignment={pastPaper}
-                  styles={styles}
-                  key={pastPaper._id}
-                  cardType={"Past-Paper"}
-                />
-              ))}
+              {assignments.assignments.length > 0 && (
+                <div className={styles["section-container"]}>
+                  <h2 className={styles["tags-recognize"]}>
+                    AVAILABLE ASSIGNMENTS
+                  </h2>
+                  {assignments.assignments.map((assignment) => (
+                    <AQP_Card
+                      assignment={assignment}
+                      styles={styles}
+                      cardType={"Assignment"}
+                      key={assignment._id}
+                    />
+                  ))}
+                </div>
+              )}
+              {quizzes.quizzes.length > 0 && (
+                <div className={styles["section-container"]}>
+                  <h2 className={styles["tags-recognize"]}>AVAILABLE QUIZZES</h2>
+                  {quizzes.quizzes.map((quiz) => (
+                    <AQP_Card
+                      assignment={quiz}
+                      styles={styles}
+                      key={quiz._id}
+                      cardType={"Quiz"}
+                    />
+                  ))}
+                </div>
+              )}
+              {pastPapers.pastPapers.length > 0 && (
+                <div className={styles["section-container"]}>
+                  <h2 className={styles["tags-recognize"]}>
+                    AVAILABLE PAST PAPERS
+                  </h2>
+                  {pastPapers.pastPapers.map((pastPaper) => (
+                    <AQP_Card
+                      assignment={pastPaper}
+                      styles={styles}
+                      key={pastPaper._id}
+                      cardType={"Past-Paper"}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         )
       )}
     </div>
-  );
+  );  
 };
 
 export default Courses;

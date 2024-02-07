@@ -1,7 +1,6 @@
 import React from "react";
 
 const AQP_Card = ({ assignment, styles, cardType }) => {
-
   const getDate = (datee) => {
     const dateObject = new Date(datee);
     let year = dateObject.getFullYear();
@@ -26,13 +25,13 @@ const AQP_Card = ({ assignment, styles, cardType }) => {
   return (
     <div className={styles["courses-container"]} key={assignment._id}>
       <h4 className={styles["assignment-heading"]}>
-        {filterName(assignment.title)}
+        Title: {filterName(assignment.title)}
       </h4>
       <p className={styles["assignment-details"]}>
         Instructor: {assignment.instructor}
       </p>
       <p className={styles["assignment-details"]}>
-        {getDate(assignment.updatedAt)}
+        Uploaded on: {getDate(assignment.updatedAt)}
       </p>
       <button
         className={styles["assignment-btn"]}

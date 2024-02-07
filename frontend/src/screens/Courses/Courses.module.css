@@ -10,7 +10,7 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   border: 2px solid #dae7e5;
   background-color: #eeeeee;
-  width: 400px;
+  width: 380px;
   align-items: center;
   justify-content: center;
   margin: 10px;
@@ -20,6 +20,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  padding-left: 15px;
 }
 
 .courses-heading {
@@ -74,4 +75,17 @@
 
 .solutions-btn:hover {
   background-color: #218838;
+}
+
+.section-container {
+  margin-bottom: 20px;
+  border: 3px solid #1F2544;
+  box-shadow: 1px 1px 10px #B4B4B8;
+  margin: 5px;
+  border-radius: 5px;
+}
+
+.tags-recognize {
+  text-align: center;
+  color: #12372A;
 }
