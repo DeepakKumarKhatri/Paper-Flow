@@ -29,6 +29,9 @@ router.get(
 );
 
 /*DONE*/
+router.get("/allCourses/:studentID", studentAssignmentController.studentCourses);
+
+/*DONE*/
 router.post("/assignment/:courseID", upload.single("assignment"), (req, res) =>
   studentAssignmentController.uploadAssignment(req, res, storage)
 );

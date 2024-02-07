@@ -13,26 +13,44 @@ const {
   deleteObject,
 } = require("firebase/storage");
 
+const studentCourses = async (req, res) => {
+  try {
+    const student = await Student.findById(req.params.studentID);
+    const detailedCourses = await Promise.all(
+      student.studentCourses.map(async (course) => {
+        const detailedCourse = await Course.findById(course._id);
+        return detailedCourse;
+      })
+    );
+    res.send({ detailedCourses: detailedCourses });
+  } catch (error) {
+    res.status(500).send({ message: error.message });
+  }
+};
+
+
 const allAssignments = async (req, res) => {
   try {
-    const course = await Course.findOne({ courseCode: req.params.courseID });
+    const course = await Course.findOne({ _id: req.params.courseID });
 
-    if (course.length === 0) {
-      res.json({ status: "error", message: "Course not found" });
-      return;
+    if (!course) {
+      return res
+        .status(404)
+        .json({ status: "error", message: "Course not found" });
     }
 
-    if (!course.assignments) {
-      course.assignments = [];
-    }
-    let response = [];
-    course.assignments.map((assignment) => response.push(assignment));
-    const jsonResponse1 = { message: "NO DATA FOUND" };
-    const jsonResponse2 = { data: response };
-    const jsonResponse = response.length === 0 ? jsonResponse1 : jsonResponse2;
-    res.send({ jsonResponse });
+    let assignments = await Assignment.find({
+      _id: { $in: course.assignments },
+    });
+
+    const jsonResponse =
+      assignments.length === 0
+        ? { message: "NO DATA FOUND" }
+        : { data: assignments };
+    res.setHeader("Content-Disposition", "inline");
+    res.json({ data: jsonResponse });
   } catch (error) {
-    res.send({ message: error });
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -580,4 +598,5 @@ module.exports = {
   getAssignmentSolution,
   getAssignment,
   allAssignments,
+  studentCourses,
 };

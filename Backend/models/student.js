@@ -19,6 +19,10 @@ const studentSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    userType: {
+      type: String,
+      default: "Student",
+    },
     uploadedQuizzes: [
       {
         uploadedQuiz: {
