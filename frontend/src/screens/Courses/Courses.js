@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import styles from "../Courses/Courses.module.css";
 
 const Courses = () => {
   const [courseAssignments, setCourseAssignments] = useState([]);
@@ -25,10 +26,13 @@ const Courses = () => {
 
   const getDate = (datee) => {
     const dateObject = new Date(datee);
-    const year = dateObject.getFullYear();
-    const month = dateObject.getMonth() + 1;
-    const date = dateObject.getDate();
-    return year + "-" + month + "-" + date;
+    let year = dateObject.getFullYear();
+    let month = dateObject.getMonth() + 1;
+    let date = dateObject.getDate();
+
+    month = month < 10 ? '0' + month : month;
+    date = date < 10 ? '0' + date : date;
+    return date + "-" + month + "-" + year;
   };
 
   const filterName = (fileName) => {
@@ -59,26 +63,40 @@ const Courses = () => {
 
   return (
     <div>
-      <h1>Courses</h1>
+      <h1 className={styles["courses-heading"]}>YOUR COURSES</h1>
       {courseAssignments.map(({ courseID, courseName, assignments }) => (
-        <div key={courseID}>
-          <h2>Course ID: {courseID}</h2>
-          <h3>Course Name: {courseName}</h3>
-          {assignments.assignments.map((assignment) => (
-            <div className="container" key={assignment._id}>
-              <h4>{filterName(assignment.title)}</h4>
-              <p>Instructor: {assignment.instructor}</p>
-              <p>{getDate(assignment.updatedAt)}</p>
-              <button
-                onClick={() => {
-                  openAssignmentInNewTab(assignment.url);
-                }}
-              >
-                Checkout Assignment
-              </button>
-              <button>Available Solutions 📝</button>
-            </div>
-          ))}
+        <div className={styles["main-container"]} key={courseID}>
+          <h2 className={styles["course-id"]}>
+            Course: {courseID} {courseName}
+          </h2>
+          <div className={styles["all-container"]}>
+            {assignments.assignments.map((assignment) => (
+              <div className={styles["courses-container"]} key={assignment._id}>
+                <h4 className={styles["assignment-heading"]}>
+                  {filterName(assignment.title)}
+                </h4>
+                <p className={styles["assignment-details"]}>
+                  Instructor: {assignment.instructor}
+                </p>
+                <p className={styles["assignment-details"]}>
+                  {getDate(assignment.updatedAt)}
+                </p>
+                <button
+                  className={styles["assignment-btn"]}
+                  onClick={() => {
+                    openAssignmentInNewTab(assignment.url);
+                  }}
+                >
+                  Checkout Assignment
+                </button>
+                <button
+                  className={`${styles["assignment-btn"]} ${styles["solutions-btn"]}`}
+                >
+                  Available Solutions 📝
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
       ))}
     </div>
