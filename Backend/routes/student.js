@@ -52,7 +52,7 @@ router.post(
 
 /*DONE*/
 router.get(
-  "/assignmentSolution/:courseID/:title",
+  "/assignmentSolution/:objectID",
   studentAssignmentController.getAssignmentSolution
 );
 

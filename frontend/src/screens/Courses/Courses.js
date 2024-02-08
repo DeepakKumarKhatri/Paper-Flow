@@ -18,7 +18,6 @@ const Courses = () => {
       `http://localhost:8000/student/assignments/${courseID}`
     );
     const json = await data.json();
-    // console.log(json.data.data);
     return {
       courseID: json.data.courseCode,
       courseName: json.data.courseName,
@@ -86,7 +85,6 @@ const Courses = () => {
                   {assignments.assignments.map((assignment) => (
                     <AQP_Card
                       assignment={assignment}
-                      styles={styles}
                       cardType={"Assignment"}
                       key={assignment._id}
                     />
@@ -101,7 +99,6 @@ const Courses = () => {
                   {quizzes.quizzes.map((quiz) => (
                     <AQP_Card
                       assignment={quiz}
-                      styles={styles}
                       key={quiz._id}
                       cardType={"Quiz"}
                     />
@@ -116,7 +113,6 @@ const Courses = () => {
                   {pastPapers.pastPapers.map((pastPaper) => (
                     <AQP_Card
                       assignment={pastPaper}
-                      styles={styles}
                       key={pastPaper._id}
                       cardType={"Past-Paper"}
                     />

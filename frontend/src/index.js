@@ -5,6 +5,7 @@ import Courses from "./screens/Courses/Courses";
 import Contact from "./screens/Contact/Contact";
 import DocumentComp from "./screens/Document/Document";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import DocumentSolution from "./screens/PopUp/PopUp";
 
 const appRouter = createBrowserRouter([
   {
@@ -22,6 +23,10 @@ const appRouter = createBrowserRouter([
       {
         path: "/document",
         element: <DocumentComp />,
+      },
+      {
+        path: "/solution",
+        element: <DocumentSolution />,
       },
     ],
   },

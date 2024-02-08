@@ -1,29 +1,20 @@
-import React from "react";
-import DocumentComp from "../../screens/Document/Document";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { encryptLink } from "../../helpers/hashing";
+import { getDate } from "../../helpers/getDate";
+import { filterName } from "../../helpers/filterName";
+import { secureLink } from "../../helpers/secureLink";
+import DocumentSolution from "../../screens/PopUp/PopUp";
+import styles from "./AQP_Cards.module.css";
 
-const AQP_Card = ({ assignment, styles, cardType }) => {
-  const getDate = (datee) => {
-    const dateObject = new Date(datee);
-    let year = dateObject.getFullYear();
-    let month = dateObject.getMonth() + 1;
-    let date = dateObject.getDate();
+const AQP_Card = ({ assignment, cardType }) => {
+  const [showPopup, setShowPopup] = useState(false);
 
-    month = month < 10 ? "0" + month : month;
-    date = date < 10 ? "0" + date : date;
-    return date + "-" + month + "-" + year;
+  const handleOpenPopup = () => {
+    setShowPopup(true);
   };
 
-  const filterName = (fileName) => {
-    const nameWithoutNumbersAndType = fileName.replace(/^\d+|\.pdf$/g, "");
-    const nameWithoutUnderscores = nameWithoutNumbersAndType.replace(/_/g, " ");
-    return nameWithoutUnderscores;
-  };
-
-  const secureLink = (url) => {
-    const securedLink = encryptLink(url);
-    return securedLink;
+  const handleClosePopup = () => {
+    setShowPopup(false);
   };
 
   return (
@@ -35,6 +26,12 @@ const AQP_Card = ({ assignment, styles, cardType }) => {
         Instructor: {assignment.instructor}
       </p>
       <p className={styles["assignment-details"]}>
+        Uploaded by:{" "}
+        {assignment.uploadedByUser !== null
+          ? assignment.uploadedByUser
+          : "Admin"}
+      </p>
+      <p className={styles["assignment-details"]}>
         Uploaded on: {getDate(assignment.updatedAt)}
       </p>
       <Link to={"/document"} state={{ urlFile: secureLink(assignment?.url) }}>
@@ -42,14 +39,23 @@ const AQP_Card = ({ assignment, styles, cardType }) => {
           Checkout {cardType}
         </button>
       </Link>
+
       <button
         className={`${styles["assignment-btn"]} ${styles["solutions-btn"]}`}
+        onClick={handleOpenPopup}
       >
         Available Solutions:{" "}
         {assignment?.assignmentSolutions?.length !== undefined
           ? assignment?.assignmentSolutions?.length
           : 0}
       </button>
+      {showPopup && assignment?.assignmentSolutions?.length > 0 && (
+        <DocumentSolution
+          solutionFiles={assignment.assignmentSolutions}
+          cardType={cardType}
+          onClose={handleClosePopup}
+        />
+      )}
     </div>
   );
 };

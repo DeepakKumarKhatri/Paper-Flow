@@ -28,7 +28,6 @@ const studentCourses = async (req, res) => {
   }
 };
 
-
 const allAssignments = async (req, res) => {
   try {
     const course = await Course.findOne({ _id: req.params.courseID });
@@ -238,43 +237,8 @@ const uploadAssignmentSolution = async (req, res, storage) => {
  */
 const getAssignmentSolution = async (req, res) => {
   try {
-    const course = await Course.findOne({ courseCode: req.params.courseID });
-
-    if (!course) {
-      res.status(404).json({ status: "error", message: "Course not found" });
-      return;
-    }
-
-    const populatedAssignments = await Promise.all(
-      course.assignments.map(async (assignment) => {
-        const assignmentDocument = await Assignment.findById(assignment._id);
-        return assignmentDocument.toObject();
-      })
-    );
-
-    const assignmentToUpdate = populatedAssignments.find(
-      (assignment) => assignment.title === req.params.title
-    );
-
-    if (!assignmentToUpdate) {
-      res.status(404).json({
-        status: "error",
-        message: "Assignment not found for this course",
-      });
-      return;
-    }
-
-    const assignmentFind = await Assignment.findOne({
-      title: req.params.title,
-    });
-
-    const assignmentSolution = await Promise.all(
-      assignmentFind.assignmentSolutions.map(async (assignmentSol) => {
-        const assignmentSolutionDocument = await MaterialSolution.findById(
-          assignmentSol._id
-        );
-        return assignmentSolutionDocument.toObject();
-      })
+    const assignmentSolution = await MaterialSolution.findById(
+      req.params.objectID
     );
 
     res.status(200).json({ data: assignmentSolution });
