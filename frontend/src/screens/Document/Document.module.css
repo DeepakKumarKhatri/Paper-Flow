@@ -1,8 +1,8 @@
-.pdfContainer{
+.pdfContainer {
     width: 100%;
-    height: 900px;
-    overflow-y: auto;
+    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-}
+  }
+  

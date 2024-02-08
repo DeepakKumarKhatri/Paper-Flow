@@ -37,17 +37,18 @@ const AQP_Card = ({ assignment, styles, cardType }) => {
       <p className={styles["assignment-details"]}>
         Uploaded on: {getDate(assignment.updatedAt)}
       </p>
-      <Link to={"/document"} state={{ urlFile: secureLink(assignment.url) }}>
-        <button
-          className={styles["assignment-btn"]}
-        >
+      <Link to={"/document"} state={{ urlFile: secureLink(assignment?.url) }}>
+        <button className={styles["assignment-btn"]}>
           Checkout {cardType}
         </button>
       </Link>
       <button
         className={`${styles["assignment-btn"]} ${styles["solutions-btn"]}`}
       >
-        Available Solutions 📝
+        Available Solutions:{" "}
+        {assignment?.assignmentSolutions?.length !== undefined
+          ? assignment?.assignmentSolutions?.length
+          : 0}
       </button>
     </div>
   );

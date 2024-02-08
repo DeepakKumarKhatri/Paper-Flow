@@ -18,6 +18,7 @@ const Courses = () => {
       `http://localhost:8000/student/assignments/${courseID}`
     );
     const json = await data.json();
+    // console.log(json.data.data);
     return {
       courseID: json.data.courseCode,
       courseName: json.data.courseName,
@@ -70,7 +71,7 @@ const Courses = () => {
   return (
     <div>
       <h1 className={styles["courses-heading"]}>YOUR COURSES</h1>
-      {courseAssignments.map(
+      {courseAssignments.map(      
         ({ courseID, courseName, assignments, quizzes, pastPapers }) => (
           <div className={styles["main-container"]} key={courseID}>
             <h2 className={styles["course-id"]}>
