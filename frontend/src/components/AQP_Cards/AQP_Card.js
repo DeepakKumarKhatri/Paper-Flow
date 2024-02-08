@@ -1,4 +1,7 @@
 import React from "react";
+import DocumentComp from "../../screens/Document/Document";
+import { Link } from "react-router-dom";
+import { encryptLink } from "../../helpers/hashing";
 
 const AQP_Card = ({ assignment, styles, cardType }) => {
   const getDate = (datee) => {
@@ -18,8 +21,9 @@ const AQP_Card = ({ assignment, styles, cardType }) => {
     return nameWithoutUnderscores;
   };
 
-  const openAssignmentInNewTab = (url) => {
-    window.open(url, "_blank");
+  const secureLink = (url) => {
+    const securedLink = encryptLink(url);
+    return securedLink;
   };
 
   return (
@@ -33,14 +37,13 @@ const AQP_Card = ({ assignment, styles, cardType }) => {
       <p className={styles["assignment-details"]}>
         Uploaded on: {getDate(assignment.updatedAt)}
       </p>
-      <button
-        className={styles["assignment-btn"]}
-        onClick={() => {
-          openAssignmentInNewTab(assignment.url);
-        }}
-      >
-        Checkout {cardType}
-      </button>
+      <Link to={"/document"} state={{ urlFile: secureLink(assignment.url) }}>
+        <button
+          className={styles["assignment-btn"]}
+        >
+          Checkout {cardType}
+        </button>
+      </Link>
       <button
         className={`${styles["assignment-btn"]} ${styles["solutions-btn"]}`}
       >

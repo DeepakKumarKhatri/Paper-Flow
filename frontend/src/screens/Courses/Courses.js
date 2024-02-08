@@ -94,7 +94,9 @@ const Courses = () => {
               )}
               {quizzes.quizzes.length > 0 && (
                 <div className={styles["section-container"]}>
-                  <h2 className={styles["tags-recognize"]}>AVAILABLE QUIZZES</h2>
+                  <h2 className={styles["tags-recognize"]}>
+                    AVAILABLE QUIZZES
+                  </h2>
                   {quizzes.quizzes.map((quiz) => (
                     <AQP_Card
                       assignment={quiz}
@@ -125,7 +127,7 @@ const Courses = () => {
         )
       )}
     </div>
-  );  
+  );
 };
 
 export default Courses;
