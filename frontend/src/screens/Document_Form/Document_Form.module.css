@@ -37,7 +37,7 @@
 .submit_button {
   width: 100%;
   padding: 12px;
-  background-color: #007bff;
+  background-color: #211c6a;
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -47,5 +47,26 @@
 }
 
 .submit_button:hover {
-  background-color: #0056b3;
+  background-color: #0e0a45;
+}
+
+@keyframes shimmer_animation_keyframes {
+  0% {
+    background-position: -200%;
+  }
+  100% {
+    background-position: 200%;
+  }
+}
+
+.shimmer_animation {
+  background-image: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
+  background-repeat: no-repeat;
+  background-size: 200% auto;
+  animation: shimmer_animation_keyframes 2s infinite linear;
 }

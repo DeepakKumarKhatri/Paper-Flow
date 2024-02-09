@@ -3,6 +3,7 @@ import styles from "../Document_Form/Document_Form.module.css";
 import { years } from "../../configs/years";
 import { useParams } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import Success_Modal from "../../components/Success_Modal/Success_Modal";
 
 const Document_Form = () => {
   const [semester, setSemester] = useState("");
@@ -15,6 +16,8 @@ const Document_Form = () => {
   const [assignmentTitle, setAssignmentTitle] = useState(
     location?.state?.assignment
   );
+  const [loading, setLoading] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const getUrl = () => {
     switch (solutionType) {
@@ -35,6 +38,7 @@ const Document_Form = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     const formData = new FormData();
     formData.append("semester", semester);
@@ -78,15 +82,19 @@ const Document_Form = () => {
       }
 
       const data = await response.json();
+      if (data.status === "OK") {
+        setShowSuccessModal(true);
+      }
       console.log("Success:", data);
 
-      // Clear form fields after successful submission
       // setSemester('');
       // setSolutionType('');
       // setInstructor('');
       // setFile(null);
     } catch (error) {
       console.error("Error:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -165,10 +173,20 @@ const Document_Form = () => {
           />
         </div>
 
-        <button type="submit" className={styles.submit_button}>
-          Submit
+        <button
+          type="submit"
+          className={`${styles.submit_button} ${
+            loading ? styles.shimmer_animation : ""
+          }`}
+          disabled={loading}
+        >
+          {loading ? "Submitting..." : "Submit"}
         </button>
       </form>
+      <Success_Modal
+        isOpen={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
+      />
     </div>
   );
 };
