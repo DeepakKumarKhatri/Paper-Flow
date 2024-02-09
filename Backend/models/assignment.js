@@ -5,7 +5,7 @@ const assignmentSchema = new mongoose.Schema(
     title: {
       type: String,
     },
-    assignmentDate: {
+    semester: {
       type: String,
     },
     fileType: {

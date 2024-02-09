@@ -18,7 +18,7 @@ const studentDashboad = async (req, res) => {
 const uploadPastPaper = async (req, res, storage) => {
   try {
     const studentEmail = req.body.studentEmail;
-    const semester = req.params.semester;
+    const semester = req.body.semester;
     const instructor = req.body.instructor;
     const student = await Student.findOne({ email: studentEmail });
     if (!student) {

@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 
 const Courses = () => {
   const [courseAssignments, setCourseAssignments] = useState([]);
+  const [studentInformation, setStudentInformation] = useState(null);
 
   const getUserCourses = async () => {
     try {
@@ -15,7 +16,10 @@ const Courses = () => {
         throw new Error("Failed to fetch user courses");
       }
       const json = await data.json();
-      return json.detailedCourses;
+      return {
+        detailedCourses: json.detailedCourses,
+        studentData: json.studentData,
+      };
     } catch (error) {
       console.error("Error fetching user courses:", error);
       return [];
@@ -75,7 +79,9 @@ const Courses = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const courses = await getUserCourses();
+      const { detailedCourses, studentData } = await getUserCourses();
+      setStudentInformation(studentData);
+      const courses = detailedCourses;
       const assignmentData = await Promise.all(
         courses.map(async (course) => ({
           courseID: course.courseCode,
@@ -102,6 +108,7 @@ const Courses = () => {
             <Link
               title={"Upload a solution"}
               to={`/form/${courseID}`}
+              state={{ student: studentInformation }}
               className={styles.contributionMessage}
             >
               Have anything to contribute?

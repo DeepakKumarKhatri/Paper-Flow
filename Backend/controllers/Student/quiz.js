@@ -16,6 +16,7 @@ const uploadQuiz = async (req, res, storage) => {
   try {
     const studentEmail = req.body.studentEmail;
     const instructor = req.body.instructor;
+    const semester = req.body.semester;
     const student = await Student.findOne({ email: studentEmail });
     if (!student) {
       res.json({ status: "error", message: "Student not valid" });
@@ -49,7 +50,7 @@ const uploadQuiz = async (req, res, storage) => {
     const downloadURL = await getDownloadURL(snapshot.ref);
     const quizResponse = await Quiz.create({
       title: fileName,
-      quizDate: formatDateNow(),
+      semester: semester,
       fileType: req.file.mimetype,
       uploadedByUser: student._id,
       instructor: instructor,

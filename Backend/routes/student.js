@@ -129,7 +129,7 @@ router.patch(
 
 /*DONE*/
 router.post(
-  "/pastPaper/:courseID/:semester",
+  "/pastPaper/:courseID",
   upload.single("pastpaper"),
   (req, res) => studentPastPaperController.uploadPastPaper(req, res, storage)
 );

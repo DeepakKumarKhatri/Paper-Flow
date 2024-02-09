@@ -5,7 +5,7 @@ const quizSchema = new mongoose.Schema(
     title: {
       type: String,
     },
-    quizDate: {
+    semester: {
       type: String,
     },
     fileType: {

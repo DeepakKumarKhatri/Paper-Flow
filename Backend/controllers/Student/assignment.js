@@ -16,13 +16,21 @@ const {
 const studentCourses = async (req, res) => {
   try {
     const student = await Student.findById(req.params.studentID);
-    const detailedCourses = await Promise.all(
-      student.studentCourses.map(async (course) => {
-        const detailedCourse = await Course.findById(course._id);
-        return detailedCourse;
-      })
-    );
-    res.send({ detailedCourses: detailedCourses });
+    if (student) {
+      const studentWithoutPassword = { ...student.toObject() };
+      delete studentWithoutPassword.password;
+
+      const detailedCourses = await Promise.all(
+        student.studentCourses.map(async (course) => {
+          const detailedCourse = await Course.findById(course._id);
+          return detailedCourse;
+        })
+      );
+      res.send({
+        detailedCourses: detailedCourses,
+        studentData: studentWithoutPassword,
+      });
+    }
   } catch (error) {
     res.status(500).send({ message: error.message });
   }
@@ -56,6 +64,7 @@ const allAssignments = async (req, res) => {
 const uploadAssignment = async (req, res, storage) => {
   try {
     const studentEmail = req.body.studentEmail;
+    const semester = req.body.semester;
     const instructor = req.body.instructor;
     const student = await Student.findOne({ email: studentEmail });
     if (!student) {
@@ -90,7 +99,7 @@ const uploadAssignment = async (req, res, storage) => {
     const downloadURL = await getDownloadURL(snapshot.ref);
     const assignmentResponse = await Assignment.create({
       title: fileName,
-      assignmentDate: formatDateNow(),
+      semester: semester,
       fileType: req.file.mimetype,
       uploadedByUser: student._id,
       instructor: instructor,
