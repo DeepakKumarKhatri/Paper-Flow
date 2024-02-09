@@ -123,7 +123,9 @@ const Courses = () => {
                     <AQP_Card
                       assignment={assignment}
                       cardType={"Assignment"}
+                      courseId={courseID}
                       key={assignment._id}
+                      student={studentInformation}
                     />
                   ))}
                 </div>
@@ -137,7 +139,9 @@ const Courses = () => {
                     <AQP_Card
                       assignment={quiz}
                       key={quiz._id}
+                      courseId={courseID}
                       cardType={"Quiz"}
+                      student={studentInformation}
                     />
                   ))}
                 </div>
@@ -151,7 +155,9 @@ const Courses = () => {
                     <AQP_Card
                       assignment={pastPaper}
                       key={pastPaper._id}
+                      courseId={courseID}
                       cardType={"Past-Paper"}
+                      student={studentInformation}
                     />
                   ))}
                 </div>

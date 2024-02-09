@@ -12,6 +12,9 @@ const Document_Form = () => {
   const { courseID } = useParams();
   const location = useLocation();
   const [student, setStudent] = useState(location?.state?.student);
+  const [assignmentTitle, setAssignmentTitle] = useState(
+    location?.state?.assignment
+  );
 
   const getUrl = () => {
     switch (solutionType) {
@@ -20,9 +23,9 @@ const Document_Form = () => {
       case "Quiz":
         return `http://localhost:8000/student/quiz/${courseID}`;
       case "PastPaper":
-        return `http://localhost:8000/student/pastPaper/${courseID}`;;
+        return `http://localhost:8000/student/pastPaper/${courseID}`;
       case "AssignmentSolution":
-        return ``;
+        return `http://localhost:8000/student/assignmentSolution/${courseID}/${assignmentTitle}`;
       case "QuizSolution":
         return ``;
       case "PastPaperSolution":
@@ -40,6 +43,10 @@ const Document_Form = () => {
     solutionType === "Assignment" && formData.append("assignment", file);
     solutionType === "Quiz" && formData.append("quiz", file);
     solutionType === "PastPaper" && formData.append("pastpaper", file);
+    solutionType === "AssignmentSolution" &&
+      formData.append("assignmentSolution", file);
+    solutionType === "AssignmentSolution" &&
+      formData.append("title", assignmentTitle);
 
     try {
       const response = await fetch(getUrl(), {

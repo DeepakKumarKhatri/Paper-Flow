@@ -1,7 +1,14 @@
 import React from "react";
 import styles from "../Ask_Solution_PopUp/Ask_Solution_PopUp.module.css";
+import { Link } from "react-router-dom";
 
-const Ask_Solution_PopUp = ({ onClose, title }) => {
+const Ask_Solution_PopUp = ({
+  onClose,
+  title,
+  courseId,
+  assignment,
+  student,
+}) => {
   return (
     <div className={styles.popupOverlay}>
       <div className={styles.popup}>
@@ -9,9 +16,14 @@ const Ask_Solution_PopUp = ({ onClose, title }) => {
           <h3 className={styles.noSolutionFound}>
             No Solution Found for {title}
           </h3>
-          <button className={` ${styles["upload-btn"]}`}>
-            Upload a Solution
-          </button>
+          <Link
+            to={`/form/${courseId}`}
+            state={{ assignment: assignment, student: student }}
+          >
+            <button className={` ${styles["upload-btn"]}`}>
+              Upload a Solution
+            </button>
+          </Link>
 
           <button className={` ${styles["request-btn"]}`}>
             Request a Solution

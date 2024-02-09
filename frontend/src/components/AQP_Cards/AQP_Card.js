@@ -7,7 +7,7 @@ import DocumentSolution from "../../screens/PopUp/PopUp";
 import styles from "./AQP_Cards.module.css";
 import Ask_Solution_PopUp from "../Ask_Solution_PopUp/Ask_Solution_PopUp";
 
-const AQP_Card = ({ assignment, cardType }) => {
+const AQP_Card = ({ assignment, cardType, courseId, student }) => {
   const [showPopup, setShowPopup] = useState(false);
   const [userData, setUserData] = useState([]);
 
@@ -88,6 +88,9 @@ const AQP_Card = ({ assignment, cardType }) => {
           <Ask_Solution_PopUp
             onClose={handleClosePopup}
             title={filterName(assignment.title)}
+            courseId={courseId}
+            assignment={assignment.title}
+            student={student}
           />
         )
       )}
