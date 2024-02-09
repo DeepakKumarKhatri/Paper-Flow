@@ -7,7 +7,7 @@ const Courses = () => {
 
   const getUserCourses = async () => {
     const data = await fetch(
-      "http://localhost:8000/student/allCourses/65a93843aec24ba21ae373b5"
+      `http://localhost:8000/student/allCourses/${"65a93843aec24ba21ae373b5"}`
     );
     const json = await data.json();
     return json.detailedCourses;
@@ -70,7 +70,7 @@ const Courses = () => {
   return (
     <div>
       <h1 className={styles["courses-heading"]}>YOUR COURSES</h1>
-      {courseAssignments.map(      
+      {courseAssignments.map(
         ({ courseID, courseName, assignments, quizzes, pastPapers }) => (
           <div className={styles["main-container"]} key={courseID}>
             <h2 className={styles["course-id"]}>

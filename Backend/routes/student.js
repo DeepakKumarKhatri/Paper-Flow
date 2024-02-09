@@ -3,6 +3,7 @@ var router = express.Router();
 var studentAssignmentController = require("../controllers/Student/assignment");
 var studentQuizController = require("../controllers/Student/quiz");
 var studentPastPaperController = require("../controllers/Student/pastpaper");
+var studentInformationController = require("../controllers/Student/student");
 const multer = require("multer");
 const { initializeApp } = require("firebase/app");
 const { getStorage } = require("firebase/storage");
@@ -29,7 +30,10 @@ router.get(
 );
 
 /*DONE*/
-router.get("/allCourses/:studentID", studentAssignmentController.studentCourses);
+router.get(
+  "/allCourses/:studentID",
+  studentAssignmentController.studentCourses
+);
 
 /*DONE*/
 router.post("/assignment/:courseID", upload.single("assignment"), (req, res) =>
@@ -167,5 +171,13 @@ router.delete(
 );
 
 /*  ************************** PAST-PAPER END **************************   */
+
+/*  ************************** STUDENT START **************************   */
+
+router.get("/student/:studentID", studentInformationController.getStudent);
+
+
+
+/*  ************************** STUDENT END **************************   */
 
 module.exports = router;

@@ -3,7 +3,6 @@ import styles from "../PopUp/PopUp.module.css";
 import Solution_Card from "../../components/Solution_Card/Solution_Card";
 
 const DocumentSolution = ({ solutionFiles, onClose, cardType }) => {
-  console.log(solutionFiles);
   const [documentSolution, setDocumentSolution] = useState([]);
 
   const getSolutions = async () => {
