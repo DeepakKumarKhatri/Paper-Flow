@@ -27,9 +27,9 @@ const Document_Form = () => {
       case "AssignmentSolution":
         return `http://localhost:8000/student/assignmentSolution/${courseID}/${assignmentTitle}`;
       case "QuizSolution":
-        return ``;
+        return `http://localhost:8000/student/quizSolution/${courseID}`;
       case "PastPaperSolution":
-        return ``;
+        return `http://localhost:8000/student/pastPaperSolution/${courseID}`;
     }
   };
 
@@ -40,13 +40,32 @@ const Document_Form = () => {
     formData.append("semester", semester);
     formData.append("instructor", instructor);
     formData.append("studentEmail", student.email);
-    solutionType === "Assignment" && formData.append("assignment", file);
-    solutionType === "Quiz" && formData.append("quiz", file);
-    solutionType === "PastPaper" && formData.append("pastpaper", file);
-    solutionType === "AssignmentSolution" &&
-      formData.append("assignmentSolution", file);
-    solutionType === "AssignmentSolution" &&
-      formData.append("title", assignmentTitle);
+
+    switch (solutionType) {
+      case "Assignment":
+        formData.append("assignment", file);
+        break;
+      case "Quiz":
+        formData.append("quiz", file);
+        break;
+      case "PastPaper":
+        formData.append("pastpaper", file);
+        break;
+      case "AssignmentSolution":
+        formData.append("assignmentSolution", file);
+        formData.append("title", assignmentTitle);
+        break;
+      case "QuizSolution":
+        formData.append("quizSolution", file);
+        formData.append("title", assignmentTitle);
+        break;
+      case "PastPaperSolution":
+        formData.append("pastPaperSolution", file);
+        formData.append("title", assignmentTitle);
+        break;
+      default:
+        break;
+    }
 
     try {
       const response = await fetch(getUrl(), {

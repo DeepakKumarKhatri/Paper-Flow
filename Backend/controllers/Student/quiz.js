@@ -153,7 +153,7 @@ const uploadQuizSolution = async (req, res, storage) => {
 
     // Find the quiz with the specified title
     const quizToUpdate = populatedQuizzes.find(
-      (quiz) => quiz.title === req.params.quizTitle
+      (quiz) => quiz.title === req.body.title
     );
 
     if (!quizToUpdate) {

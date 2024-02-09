@@ -101,7 +101,7 @@ router.get("/quizzes/:courseID", studentQuizController.allQuizzes);
 router.get("/quiz/:courseID/:quizTitle", studentQuizController.getQuiz);
 /*DONE*/
 router.post(
-  "/quizSolution/:courseID/:quizTitle",
+  "/quizSolution/:courseID",
   upload.single("quizSolution"),
   (req, res) => studentQuizController.uploadQuizSolution(req, res, storage)
 );
@@ -152,7 +152,7 @@ router.get(
 );
 /*DONE*/
 router.post(
-  "/pastPaperSolution/:courseID/:title",
+  "/pastPaperSolution/:courseID",
   upload.single("pastPaperSolution"),
   (req, res) =>
     studentPastPaperController.uploadPastPaperSolution(req, res, storage)

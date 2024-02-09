@@ -317,7 +317,7 @@ const uploadPastPaperSolution = async (req, res, storage) => {
 
     // Find the quiz with the specified title
     const pastPaperToUpdate = populatedPastPapers.find(
-      (pastPaper) => pastPaper.title === req.params.title
+      (pastPaper) => pastPaper.title === req.body.title
     );
 
     if (!pastPaperToUpdate) {
@@ -327,6 +327,8 @@ const uploadPastPaperSolution = async (req, res, storage) => {
       });
       return;
     }
+
+    console.log(pastPaperToUpdate)
 
     /* PUSH SOLUTION FILE TO SERVER */
     const fileName = Date.now() + "_" + req.file.originalname + "_Solution";

@@ -28,6 +28,28 @@ const AQP_Card = ({ assignment, cardType, courseId, student }) => {
     }
   };
 
+  const getLengthSolutions = () => {
+    if (cardType === "Assignment") {
+      return assignment?.assignmentSolutions?.length;
+    } else if (cardType === "Quiz") {
+      return assignment?.quizSolutions?.length;
+    }
+    if (cardType === "Past-Paper") {
+      return assignment?.pastPaperSolutions?.length;
+    }
+  };
+
+  const getSolutions = () => {
+    if (cardType === "Assignment") {
+      return assignment?.assignmentSolutions;
+    } else if (cardType === "Quiz") {
+      return assignment?.quizSolutions;
+    }
+    if (cardType === "Past-Paper") {
+      return assignment?.pastPaperSolutions;
+    }
+  };
+
   const getUser = (userID) => {
     const user = userData.find((userData) => userData._id === userID);
     return user ? user.name : "Admin";
@@ -73,13 +95,11 @@ const AQP_Card = ({ assignment, cardType, courseId, student }) => {
         onClick={handleOpenPopup}
       >
         Available Solutions:{" "}
-        {assignment?.assignmentSolutions?.length !== undefined
-          ? assignment?.assignmentSolutions?.length
-          : 0}
+        {getLengthSolutions() !== undefined ? getLengthSolutions() : 0}
       </button>
-      {showPopup && assignment?.assignmentSolutions?.length > 0 ? (
+      {showPopup && getLengthSolutions() > 0 ? (
         <DocumentSolution
-          solutionFiles={assignment.assignmentSolutions}
+          solutionFiles={getSolutions()}
           cardType={cardType}
           onClose={handleClosePopup}
         />
