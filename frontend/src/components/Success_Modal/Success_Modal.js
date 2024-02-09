@@ -12,6 +12,10 @@ const Success_Modal = ({ isOpen, onClose }) => {
         </button>
         <h2>Success!</h2>
         <p>Document uploaded successfully.</p>
+        <p>
+          Thank you so much for this contribution. Your document soon will be
+          accepted by the admin.
+        </p>
       </div>
     </div>
   );

@@ -106,3 +106,45 @@
   text-align: center;
   color: #12372a;
 }
+
+.show-more-button {
+  background-color: #6895D2; 
+  color: #fff; 
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+  margin-right: 30px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.show-less-button {
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.button-container{
+  display: flex;
+  justify-content: center;
+  margin: 20px;
+}
+
+.show-more-button:hover{
+  background-color: rgb(7, 59, 113);
+  transform: scale(1.05);
+}
+
+.show-less-button:hover{
+  background-color: #80111c;
+  transform: scale(1.05);
+}
+

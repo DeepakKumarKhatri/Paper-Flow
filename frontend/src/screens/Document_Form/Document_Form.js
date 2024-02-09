@@ -100,7 +100,11 @@ const Document_Form = () => {
 
   return (
     <div className={styles.container}>
-      <h2 className={styles.title}>Upload Assignment Form</h2>
+      <h2 className={styles.title}>Contribute Your Collection Here 👇</h2>
+      <p>
+        <strong>Note: </strong>After careful checking our admin will approve
+        your contribution. We can't guarantee about every upload.
+      </p>
       <form onSubmit={handleSubmit} className={styles.form}>
         <div className={styles.form_group}>
           <label htmlFor="semester" className={styles.label}>
@@ -126,7 +130,7 @@ const Document_Form = () => {
 
         <div className={styles.form_group}>
           <label htmlFor="solutionType" className={styles.label}>
-            Solution Type:
+            Document Type:
           </label>
           <select
             id="solutionType"

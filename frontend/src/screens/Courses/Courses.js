@@ -6,6 +6,8 @@ import { Link } from "react-router-dom";
 const Courses = () => {
   const [courseAssignments, setCourseAssignments] = useState([]);
   const [studentInformation, setStudentInformation] = useState(null);
+  const [showAllItems, setShowAllItems] = useState(false);
+  const [numberOfItemsToShow, setNumberOfItemsToShow] = useState(3);
 
   const getUserCourses = async () => {
     try {
@@ -96,6 +98,16 @@ const Courses = () => {
     fetchData();
   }, []);
 
+  const handleShowMore = () => {
+    setShowAllItems(true);
+    setNumberOfItemsToShow((prev) => prev + 3);
+  };
+
+  const handleShowLess = () => {
+    setShowAllItems(false);
+    setNumberOfItemsToShow(3);
+  };
+
   return (
     <div>
       <h1 className={styles["courses-heading"]}>YOUR COURSES</h1>
@@ -119,15 +131,35 @@ const Courses = () => {
                   <h2 className={styles["tags-recognize"]}>
                     AVAILABLE ASSIGNMENTS
                   </h2>
-                  {assignments.assignments.map((assignment) => (
-                    <AQP_Card
-                      assignment={assignment}
-                      cardType={"Assignment"}
-                      courseId={courseID}
-                      key={assignment._id}
-                      student={studentInformation}
-                    />
-                  ))}
+                  {assignments.assignments
+                    .slice(0, numberOfItemsToShow)
+                    .map((assignment) => (
+                      <AQP_Card
+                        assignment={assignment}
+                        cardType={"Assignment"}
+                        courseId={courseID}
+                        key={assignment._id}
+                        student={studentInformation}
+                      />
+                    ))}
+                  <div className={styles["button-container"]}>
+                    {assignments.assignments.length > numberOfItemsToShow && (
+                      <button
+                        className={styles["show-more-button"]}
+                        onClick={handleShowMore}
+                      >
+                        Show More
+                      </button>
+                    )}
+                    {showAllItems && (
+                      <button
+                        className={styles["show-less-button"]}
+                        onClick={handleShowLess}
+                      >
+                        Show Less
+                      </button>
+                    )}
+                  </div>
                 </div>
               )}
               {quizzes.quizzes.length > 0 && (
@@ -135,7 +167,7 @@ const Courses = () => {
                   <h2 className={styles["tags-recognize"]}>
                     AVAILABLE QUIZZES
                   </h2>
-                  {quizzes.quizzes.map((quiz) => (
+                  {quizzes.quizzes.slice(0, numberOfItemsToShow).map((quiz) => (
                     <AQP_Card
                       assignment={quiz}
                       key={quiz._id}
@@ -144,6 +176,24 @@ const Courses = () => {
                       student={studentInformation}
                     />
                   ))}
+                  <div className={styles["button-container"]}>
+                    {assignments.assignments.length > numberOfItemsToShow && (
+                      <button
+                        className={styles["show-more-button"]}
+                        onClick={handleShowMore}
+                      >
+                        Show More
+                      </button>
+                    )}
+                    {showAllItems && (
+                      <button
+                        className={styles["show-less-button"]}
+                        onClick={handleShowLess}
+                      >
+                        Show Less
+                      </button>
+                    )}
+                  </div>
                 </div>
               )}
               {pastPapers.pastPapers.length > 0 && (
@@ -151,15 +201,35 @@ const Courses = () => {
                   <h2 className={styles["tags-recognize"]}>
                     AVAILABLE PAST PAPERS
                   </h2>
-                  {pastPapers.pastPapers.map((pastPaper) => (
-                    <AQP_Card
-                      assignment={pastPaper}
-                      key={pastPaper._id}
-                      courseId={courseID}
-                      cardType={"Past-Paper"}
-                      student={studentInformation}
-                    />
-                  ))}
+                  {pastPapers.pastPapers
+                    .slice(0, numberOfItemsToShow)
+                    .map((pastPaper) => (
+                      <AQP_Card
+                        assignment={pastPaper}
+                        key={pastPaper._id}
+                        courseId={courseID}
+                        cardType={"Past-Paper"}
+                        student={studentInformation}
+                      />
+                    ))}
+                  <div className={styles["button-container"]}>
+                    {assignments.assignments.length > numberOfItemsToShow && (
+                      <button
+                        className={styles["show-more-button"]}
+                        onClick={handleShowMore}
+                      >
+                        Show More
+                      </button>
+                    )}
+                    {showAllItems && (
+                      <button
+                        className={styles["show-less-button"]}
+                        onClick={handleShowLess}
+                      >
+                        Show Less
+                      </button>
+                    )}
+                  </div>
                 </div>
               )}
             </div>
