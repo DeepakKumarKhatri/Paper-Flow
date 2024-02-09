@@ -27,7 +27,7 @@ const Solution_Card = ({ assignment, cardType }) => {
 
   const getUser = (userID) => {
     const user = userData.find((userData) => userData._id === userID);
-    return user ? user.name : 'Admin';
+    return user ? user.name : "Admin";
   };
 
   useEffect(() => {

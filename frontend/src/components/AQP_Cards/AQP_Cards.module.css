@@ -53,19 +53,22 @@
 }
 
 /* Button styles */
-.assignment-btn {
-  background-color: #007bff;
+.assignment-btn,
+.solutions-btn {
+  background-color: #211c6a;
   color: #fff;
   border: none;
   border-radius: 5px;
   padding: 10px 20px;
   margin-right: 10px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.assignment-btn:hover {
+.assignment-btn:hover,
+.solutions-btn:hover {
   background-color: #0056b3;
+  transform: scale(1.05);
 }
 
 /* Solutions button */

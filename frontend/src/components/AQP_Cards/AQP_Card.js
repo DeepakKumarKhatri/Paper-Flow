@@ -5,6 +5,7 @@ import { filterName } from "../../helpers/filterName";
 import { secureLink } from "../../helpers/secureLink";
 import DocumentSolution from "../../screens/PopUp/PopUp";
 import styles from "./AQP_Cards.module.css";
+import Ask_Solution_PopUp from "../Ask_Solution_PopUp/Ask_Solution_PopUp";
 
 const AQP_Card = ({ assignment, cardType }) => {
   const [showPopup, setShowPopup] = useState(false);
@@ -29,7 +30,7 @@ const AQP_Card = ({ assignment, cardType }) => {
 
   const getUser = (userID) => {
     const user = userData.find((userData) => userData._id === userID);
-    return user ? user.name : 'Admin';
+    return user ? user.name : "Admin";
   };
 
   useEffect(() => {
@@ -76,12 +77,14 @@ const AQP_Card = ({ assignment, cardType }) => {
           ? assignment?.assignmentSolutions?.length
           : 0}
       </button>
-      {showPopup && assignment?.assignmentSolutions?.length > 0 && (
+      {showPopup && assignment?.assignmentSolutions?.length > 0 ? (
         <DocumentSolution
           solutionFiles={assignment.assignmentSolutions}
           cardType={cardType}
           onClose={handleClosePopup}
         />
+      ) : (
+        showPopup && <Ask_Solution_PopUp onClose={handleClosePopup} />
       )}
     </div>
   );
