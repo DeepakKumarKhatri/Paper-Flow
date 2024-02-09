@@ -6,6 +6,7 @@ import Contact from "./screens/Contact/Contact";
 import DocumentComp from "./screens/Document/Document";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import DocumentSolution from "./screens/PopUp/PopUp";
+import Document_Form from "./screens/Document_Form/Document_Form";
 
 const appRouter = createBrowserRouter([
   {
@@ -27,6 +28,10 @@ const appRouter = createBrowserRouter([
       {
         path: "/solution",
         element: <DocumentSolution />,
+      },
+      {
+        path: "/form/:courseID",
+        element: <Document_Form />,
       },
     ],
   },

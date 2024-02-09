@@ -36,7 +36,24 @@
   margin-bottom: 15px;
   padding-right: 50%;
   margin-left: 20px;
+}
+
+.contributionMessage {
+  font-size: 18px;
+  font-weight: bold;
+  color: #a94438;
+  margin-bottom: 15px;
+  padding-right: 50%;
+  margin-left: 20px;
   text-decoration: underline;
+  cursor: pointer;
+  transition: color 0.5s ease, transform 0.5s ease, margin-left 0.5s ease;
+}
+
+.contributionMessage:hover {
+  color: #b80000;
+  transform: scale(1.03);
+  margin-left: 35px;
 }
 
 /* Assignment styles */
@@ -79,13 +96,13 @@
 
 .section-container {
   margin-bottom: 20px;
-  border: 3px solid #1F2544;
-  box-shadow: 1px 1px 10px #B4B4B8;
+  border: 3px solid #1f2544;
+  box-shadow: 1px 1px 10px #b4b4b8;
   margin: 5px;
   border-radius: 5px;
 }
 
 .tags-recognize {
   text-align: center;
-  color: #12372A;
+  color: #12372a;
 }

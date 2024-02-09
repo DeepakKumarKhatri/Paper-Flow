@@ -1,52 +1,76 @@
 import React, { useState, useEffect } from "react";
 import styles from "../Courses/Courses.module.css";
 import AQP_Card from "../../components/AQP_Cards/AQP_Card";
+import { Link } from "react-router-dom";
 
 const Courses = () => {
   const [courseAssignments, setCourseAssignments] = useState([]);
 
   const getUserCourses = async () => {
-    const data = await fetch(
-      `http://localhost:8000/student/allCourses/${"65a93843aec24ba21ae373b5"}`
-    );
-    const json = await data.json();
-    return json.detailedCourses;
+    try {
+      const data = await fetch(
+        `http://localhost:8000/student/allCourses/${"65a93843aec24ba21ae373b5"}`
+      );
+      if (!data.ok) {
+        throw new Error("Failed to fetch user courses");
+      }
+      const json = await data.json();
+      return json.detailedCourses;
+    } catch (error) {
+      console.error("Error fetching user courses:", error);
+      return [];
+    }
   };
 
   const getAssignments = async (courseID) => {
-    const data = await fetch(
-      `http://localhost:8000/student/assignments/${courseID}`
-    );
-    const json = await data.json();
-    return {
-      courseID: json.data.courseCode,
-      courseName: json.data.courseName,
-      assignments: json.data.data,
-    };
+    try {
+      const data = await fetch(
+        `http://localhost:8000/student/assignments/${courseID}`
+      );
+      const json = await data.json();
+      return {
+        courseID: json.data.courseCode,
+        courseName: json.data.courseName,
+        assignments: json.data.data,
+      };
+    } catch (error) {
+      console.error("Error fetching user assignments:", error);
+      return {};
+    }
   };
 
   const getQuizzes = async (courseID) => {
-    const data = await fetch(
-      `http://localhost:8000/student/quizzes/${courseID}`
-    );
-    const json = await data.json();
-    return {
-      courseID: json.data.courseCode,
-      courseName: json.data.courseName,
-      quizzes: JSON.parse(JSON.stringify(json)).data,
-    };
+    try {
+      const data = await fetch(
+        `http://localhost:8000/student/quizzes/${courseID}`
+      );
+      const json = await data.json();
+      return {
+        courseID: json.data.courseCode,
+        courseName: json.data.courseName,
+        quizzes: JSON.parse(JSON.stringify(json)).data,
+      };
+    } catch (error) {
+      console.error("Error fetching user quizzes:", error);
+      return {};
+    }
   };
 
   const getPastPapers = async (courseID) => {
-    const data = await fetch(
-      `http://localhost:8000/student/pastPapers/${courseID}`
-    );
-    const json = await data.json();
-    return {
-      courseID: json.data.courseCode,
-      courseName: json.data.courseName,
-      pastPapers: json.data,
-    };
+    try {
+      const data = await fetch(
+        `http://localhost:8000/student/pastPapers/${courseID}`
+      );
+      const json = await data.json();
+      return {
+        courseID: json.data.courseCode,
+        courseName: json.data.courseName,
+        pastPapers: json.data,
+      };
+    } catch (error) {
+      console.error("Error fetching user pastPapers:", error);
+      return {};
+    }
   };
 
   useEffect(() => {
@@ -63,7 +87,6 @@ const Courses = () => {
       );
       setCourseAssignments(assignmentData);
     };
-
     fetchData();
   }, []);
 
@@ -76,6 +99,13 @@ const Courses = () => {
             <h2 className={styles["course-id"]}>
               Course: {courseID} {courseName}
             </h2>
+            <Link
+              title={"Upload a solution"}
+              to={`/form/${courseID}`}
+              className={styles.contributionMessage}
+            >
+              Have anything to contribute?
+            </Link>
             <div className={styles["all-container"]}>
               {assignments.assignments.length > 0 && (
                 <div className={styles["section-container"]}>

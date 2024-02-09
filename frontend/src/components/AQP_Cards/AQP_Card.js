@@ -84,7 +84,12 @@ const AQP_Card = ({ assignment, cardType }) => {
           onClose={handleClosePopup}
         />
       ) : (
-        showPopup && <Ask_Solution_PopUp onClose={handleClosePopup} />
+        showPopup && (
+          <Ask_Solution_PopUp
+            onClose={handleClosePopup}
+            title={filterName(assignment.title)}
+          />
+        )
       )}
     </div>
   );

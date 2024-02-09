@@ -55,3 +55,12 @@
   background-color: #5a6268;
   transform: scale(1.05);
 }
+
+.closeButton:hover {
+  transform: scale(1.05);
+  background-color: rgb(255, 0, 0);
+}
+
+.noSolutionFound{
+  width: 80%;
+}
