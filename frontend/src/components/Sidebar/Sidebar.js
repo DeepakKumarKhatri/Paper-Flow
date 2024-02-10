@@ -1,19 +1,15 @@
 import React, { useState } from "react";
-import { FaAngleDown, FaAngleUp, FaBars, FaTimes } from "react-icons/fa";
+import { FaBars, FaTimes } from "react-icons/fa";
 import * as FaIcons from "react-icons/fa";
 import * as AiIcons from "react-icons/ai";
 import * as IoIcons from "react-icons/io";
+import { IoPeopleCircleSharp, IoPersonSharp } from "react-icons/io5";
 import styles from "./Sidebar.module.css";
 import { Link } from "react-router-dom";
 
 const Sidebar = () => {
-  const [dropdownVisible, setDropdownVisible] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("");
-
-  const toggleDropdown = () => {
-    setDropdownVisible(!dropdownVisible);
-  };
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
@@ -36,27 +32,41 @@ const Sidebar = () => {
 
       <ul className={styles.sidebar_menu}>
         <Link
+          to={"/courses"}
           className={`${styles.headings} ${
-            activeTab === "Home" ? styles.active : ""
+            activeTab === "Courses" ? styles.active : ""
           }`}
-          onClick={() => handleSetActiveTab("Home")}
+          onClick={() => handleSetActiveTab("Courses")}
         >
           <li>
             <AiIcons.AiFillHome />
-            <span>Home</span>
+            <span>Courses</span>
           </li>
         </Link>
         <Link
           className={`${styles.headings} ${
-            activeTab === "About" ? styles.active : ""
+            activeTab === "My Solutions" ? styles.active : ""
           }`}
-          onClick={() => handleSetActiveTab("About")}
+          onClick={() => handleSetActiveTab("My Solutions")}
         >
           <li>
-            <IoIcons.IoMdPeople />
-            <span>About Creator</span>
+            <IoIcons.IoIosPaper />
+            <span>Contributions</span>
           </li>
         </Link>
+
+        <Link
+          className={`${styles.headings} ${
+            activeTab === "My Bookmarks" ? styles.active : ""
+          }`}
+          onClick={() => handleSetActiveTab("My Bookmarks")}
+        >
+          <li>
+            <IoIcons.IoIosSave />
+            <span>Bookmarks</span>
+          </li>
+        </Link>
+
         <Link
           className={`${styles.headings} ${
             activeTab === "Messages" ? styles.active : ""
@@ -68,61 +78,29 @@ const Sidebar = () => {
             <span>Messages</span>
           </li>
         </Link>
-        <li className={styles.dropdown}>
-          <button
-            className={`${styles.dropdown_toggle} ${styles.headings}`}
-            onClick={toggleDropdown}
-          >
-            <span>Services</span>
-            {dropdownVisible ? <FaAngleUp /> : <FaAngleDown />}
-          </button>
-          <ul
-            className={`${styles.dropdown_menu} ${
-              dropdownVisible ? styles.active : ""
-            }`}
-          >
-            <Link
-              className={`${styles.headings} ${
-                activeTab === "Service 1" ? styles.active : ""
-              }`}
-              onClick={() => handleSetActiveTab("Service 1")}
-            >
-              <li>
-                <IoIcons.IoIosPaper />
-                <span>Service 1</span>
-              </li>
-            </Link>
-            <Link
-              className={`${styles.headings} ${
-                activeTab === "Service 2" ? styles.active : ""
-              }`}
-              onClick={() => handleSetActiveTab("Service 2")}
-            >
-              <li>
-                <IoIcons.IoIosPaper />
-                <span>Service 2</span>
-              </li>
-            </Link>
-            <Link
-              className={`${styles.headings} ${
-                activeTab === "Service 3" ? styles.active : ""
-              }`}
-              onClick={() => handleSetActiveTab("Service 3")}
-            >
-              <li>
-                <IoIcons.IoIosPaper />
-                <span>Service 3</span>
-              </li>
-            </Link>
-          </ul>
-        </li>
+
         <Link
           className={`${styles.headings} ${
-            activeTab === "Contact" ? styles.active : ""
+            activeTab === "Leaderboard" ? styles.active : ""
           }`}
-          onClick={() => handleSetActiveTab("Contact")}
+          onClick={() => handleSetActiveTab("Leaderboard")}
         >
-          <li>Contact</li>
+          <li>
+            <IoPeopleCircleSharp />
+            <span>Leaderboard</span>
+          </li>
+        </Link>
+
+        <Link
+          className={`${styles.headings} ${
+            activeTab === "About Creator" ? styles.active : ""
+          }`}
+          onClick={() => handleSetActiveTab("About Creator")}
+        >
+          <li>
+            <IoPersonSharp />
+            <span>About Creator</span>
+          </li>
         </Link>
       </ul>
     </div>

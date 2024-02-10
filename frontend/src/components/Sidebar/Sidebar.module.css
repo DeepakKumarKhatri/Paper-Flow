@@ -1,12 +1,14 @@
 .sidebar {
   width: 250px;
-  background-color: #e8c872;
-  color: #fff;
+  background-color: #EEEDEB;
+  color: #1F2544;
   padding: 20px;
   height: 100vh;
   position: fixed;
   left: -230px;
   transition: left 0.3s ease;
+  border-right: 5px solid #637A9F;
+  border-radius: 20px;
 }
 
 .open {
@@ -20,6 +22,7 @@
   cursor: pointer;
   font-size: 1.5rem;
   transition: transform 0.3s ease;
+  color: #030637;
 }
 
 .toggle_button:hover {
@@ -28,7 +31,7 @@
 
 .sidebar_header {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 50px;
 }
 
 .sidebar_menu {
@@ -38,13 +41,21 @@
 }
 
 .sidebar_menu li {
-  margin-bottom: 10px;
+  margin-bottom: 40px;
   align-items: center;
+  transition: margin-bottom 0.3s ease;
 }
 
-.sidebar_menu li a {
-  color: #fff;
-  text-decoration: none;
+.sidebar_menu li:hover {
+  background-color: #E3E1D9;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 20px; 
+  transition: margin-bottom 0.3s ease, background-color 0.5s ease; 
+  text-decoration: underline;
+  color: #1F2544;
+  font-weight: 700;
+  border-left: 10px solid #fc6736;
 }
 
 .headings {
@@ -92,12 +103,10 @@
 .active {
   background-color: #1f2544;
   border-left: 10px solid #fc6736;
-  padding: 2px;
   border-radius: 10px;
-  padding: 10px 5px 2px 20px;
-  margin-bottom: 10px;
+  padding: 10px 5px 0.1px 20px;
+  margin-bottom: 30px;
   color: white;
-  font-weight: 600;
   transition: all 0.3s ease;
   animation: slideIn 0.3s ease;
   cursor: pointer;
