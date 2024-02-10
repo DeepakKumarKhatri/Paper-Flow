@@ -65,6 +65,13 @@
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
+.assignment-btn {
+  padding-left: 40px;
+  background-image: url("../../assets/images/New_Tab_Icon.png");
+  background-repeat: no-repeat;
+  background-position: 10px center;
+  background-size: 20px;
+}
 .assignment-btn:hover,
 .solutions-btn:hover {
   background-color: #0056b3;

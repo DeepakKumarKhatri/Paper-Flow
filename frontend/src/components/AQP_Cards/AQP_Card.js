@@ -91,7 +91,7 @@ const AQP_Card = ({ assignment, cardType, courseId, student }) => {
       </Link>
 
       <button
-        className={`${styles["assignment-btn"]} ${styles["solutions-btn"]}`}
+        className={`${styles["solutions-btn"]}`}
         onClick={handleOpenPopup}
       >
         Available Solutions:{" "}

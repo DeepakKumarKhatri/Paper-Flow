@@ -99,17 +99,6 @@ const Document_Form = () => {
     }
   };
 
-  // Mapping object for options based on comingFrom value
-  const optionsMap = {
-    Courses: ["Assignment", "Quiz", "Past Paper"],
-    Assignment: ["Assignment Solution"],
-    Quiz: ["Quiz Solution"],
-    "Past-Paper": ["Past Paper Solution"],
-  };
-
-  // Get options based on comingFrom value
-  const options = optionsMap[comingFrom] || [];
-
   return (
     <div className={styles.container}>
       <h2 className={styles.title}>Contribute Your Collection Here 👇</h2>
@@ -152,11 +141,28 @@ const Document_Form = () => {
             required
           >
             <option value="">Select Type</option>
-            {options.map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
+            {comingFrom === "Courses" && (
+              <>
+                <option value="Assignment">Assignment</option>
+                <option value="Quiz">Quiz</option>
+                <option value="PastPaper">Past Paper</option>
+              </>
+            )}
+            {comingFrom === "Assignment" && (
+              <>
+                <option value="AssignmentSolution">Assignment Solution</option>
+              </>
+            )}
+            {comingFrom === "Quiz" && (
+              <>
+                <option value="QuizSolution">Quiz Solution</option>
+              </>
+            )}
+            {comingFrom === "Past-Paper" && (
+              <>
+                <option value="PastPaperSolution">Past Paper Solution</option>
+              </>
+            )}
           </select>
         </div>
 
