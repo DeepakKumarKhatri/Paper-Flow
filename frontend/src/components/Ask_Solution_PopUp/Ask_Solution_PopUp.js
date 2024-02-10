@@ -8,6 +8,7 @@ const Ask_Solution_PopUp = ({
   courseId,
   assignment,
   student,
+  cardType
 }) => {
   return (
     <div className={styles.popupOverlay}>
@@ -18,7 +19,7 @@ const Ask_Solution_PopUp = ({
           </h3>
           <Link
             to={`/form/${courseId}`}
-            state={{ assignment: assignment, student: student }}
+            state={{ assignment: assignment, student: student, comingFrom: cardType }}
           >
             <button className={` ${styles["upload-btn"]}`}>
               Upload a Solution

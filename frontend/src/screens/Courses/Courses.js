@@ -152,7 +152,7 @@ const Courses = () => {
             <Link
               title={"Upload a solution"}
               to={`/form/${courseID}`}
-              state={{ student: studentInformation }}
+              state={{ student: studentInformation, comingFrom: "Courses" }}
               className={styles.contributionMessage}
             >
               Have anything to contribute?

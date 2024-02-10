@@ -1,8 +1,17 @@
 import React, { useState, useEffect } from "react";
 import styles from "../PopUp/PopUp.module.css";
 import Solution_Card from "../../components/Solution_Card/Solution_Card";
+import { Link } from "react-router-dom";
 
-const DocumentSolution = ({ solutionFiles, onClose, cardType }) => {
+const DocumentSolution = ({
+  solutionFiles,
+  onClose,
+  cardType,
+  student,
+  assignment,
+  courseId,
+  title,
+}) => {
   const [documentSolution, setDocumentSolution] = useState([]);
 
   const getSolutions = async () => {
@@ -48,6 +57,12 @@ const DocumentSolution = ({ solutionFiles, onClose, cardType }) => {
         <button className={styles.closeButton} onClick={onClose}>
           X
         </button>
+        <Link
+          to={`/form/${courseId}`}
+          state={{ assignment: assignment, student: student,comingFrom: cardType }}
+        >
+          <button className={styles.uploadBtn}>Upload a Solution</button>
+        </Link>
       </div>
     </div>
   );

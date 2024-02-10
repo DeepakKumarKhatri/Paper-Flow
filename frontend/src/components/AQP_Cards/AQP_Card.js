@@ -102,6 +102,10 @@ const AQP_Card = ({ assignment, cardType, courseId, student }) => {
           solutionFiles={getSolutions()}
           cardType={cardType}
           onClose={handleClosePopup}
+          title={assignment.title}
+          courseId={courseId}
+          assignment={assignment.title}
+          student={student}
         />
       ) : (
         showPopup && (
@@ -111,6 +115,7 @@ const AQP_Card = ({ assignment, cardType, courseId, student }) => {
             courseId={courseId}
             assignment={assignment.title}
             student={student}
+            cardType={cardType}
           />
         )
       )}

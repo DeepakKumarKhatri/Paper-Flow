@@ -17,7 +17,7 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 20px;
   position: relative;
-  background-color: #EEEDEB;
+  background-color: #eeedeb;
 }
 
 .popupContent {
@@ -29,8 +29,9 @@
 
 .solutionCardContainer {
   margin: 20px 20px 0px 30px;
-  border: 4px dotted #1F2544;
+  border: 4px dotted #1f2544;
   border-radius: 30px;
+  margin-top: 80px;
 }
 
 .closeButton {
@@ -50,9 +51,33 @@
   cursor: pointer;
 }
 
-.cardNumber{
-  color: #211C6A;
+.closeButton:hover {
+  transform: scale(1.05);
+  background-color: rgb(255, 0, 0);
+}
+
+.cardNumber {
+  color: #211c6a;
   font-size: 20px;
   font-weight: bold;
   text-align: center;
+}
+
+.uploadBtn {
+  position: absolute;
+  top: 10px;
+  left: 70px;
+  background-color: #436850;
+  font-weight: 600;
+  color: #fff;
+  border-radius: 5px;
+  padding: 10px 20px;
+  height: 50px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.uploadBtn:hover {
+  background-color: #5a6268;
+  transform: scale(1.05);
 }

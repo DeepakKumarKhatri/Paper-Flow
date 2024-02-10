@@ -18,6 +18,7 @@ const Document_Form = () => {
   );
   const [loading, setLoading] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [comingFrom, setComingFrom] = useState(location?.state?.comingFrom);
 
   const getUrl = () => {
     switch (solutionType) {
@@ -140,12 +141,28 @@ const Document_Form = () => {
             required
           >
             <option value="">Select Type</option>
-            <option value="Assignment">Assignment</option>
-            <option value="Quiz">Quiz</option>
-            <option value="PastPaper">Past Paper</option>
-            <option value="AssignmentSolution">Assignment Solution</option>
-            <option value="QuizSolution">Quiz Solution</option>
-            <option value="PastPaperSolution">Past Paper Solution</option>
+            {comingFrom === "Courses" && (
+              <>
+                <option value="Assignment">Assignment</option>
+                <option value="Quiz">Quiz</option>
+                <option value="PastPaper">Past Paper</option>
+              </>
+            )}
+            {comingFrom === "Assignment" && (
+              <>
+                <option value="AssignmentSolution">Assignment Solution</option>
+              </>
+            )}
+            {comingFrom === "Quiz" && (
+              <>
+                <option value="QuizSolution">Quiz Solution</option>
+              </>
+            )}
+            {comingFrom === "Past-Paper" && (
+              <>
+                <option value="PastPaperSolution">Past Paper Solution</option>
+              </>
+            )}
           </select>
         </div>
 
