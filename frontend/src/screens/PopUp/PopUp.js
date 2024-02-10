@@ -32,6 +32,18 @@ const DocumentSolution = ({
     getSolutions();
   }, []);
 
+  useEffect(() => {
+    const handleEscKey = (event) => {
+      if (event.key === "Escape") {
+        onClose();
+      }
+    };
+    document.addEventListener("keydown", handleEscKey);
+    return () => {
+      document.removeEventListener("keydown", handleEscKey);
+    };
+  }, [onClose]);
+
   const popupContentWidth = documentSolution.length > 2 ? "93vw" : "auto";
 
   return (
@@ -59,7 +71,11 @@ const DocumentSolution = ({
         </button>
         <Link
           to={`/form/${courseId}`}
-          state={{ assignment: assignment, student: student,comingFrom: cardType }}
+          state={{
+            assignment: assignment,
+            student: student,
+            comingFrom: cardType,
+          }}
         >
           <button className={styles.uploadBtn}>Upload a Solution</button>
         </Link>
