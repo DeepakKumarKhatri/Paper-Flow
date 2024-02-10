@@ -2,12 +2,14 @@ import React, { useState, useEffect } from "react";
 import styles from "../Courses/Courses.module.css";
 import AQP_Card from "../../components/AQP_Cards/AQP_Card";
 import { Link } from "react-router-dom";
+import { filterName } from "../../helpers/filterName";
 
 const Courses = () => {
   const [courseAssignments, setCourseAssignments] = useState([]);
   const [studentInformation, setStudentInformation] = useState(null);
   const [showAllItems, setShowAllItems] = useState(false);
   const [numberOfItemsToShow, setNumberOfItemsToShow] = useState(3);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const getUserCourses = async () => {
     try {
@@ -108,10 +110,40 @@ const Courses = () => {
     setNumberOfItemsToShow(3);
   };
 
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const filteredCourseAssignments = courseAssignments.filter(
+    ({ courseID, courseName, assignments, quizzes, pastPapers }) => {
+      const combinedContent = assignments.assignments.concat(
+        quizzes.quizzes,
+        pastPapers.pastPapers
+      );
+      return (
+        courseID.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        courseName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        combinedContent.some((item) => {
+          const filteredTitle = filterName(item.title).toLowerCase();
+          return filteredTitle.includes(searchTerm.toLowerCase());
+        })
+      );
+    }
+  );
+
   return (
     <div>
-      <h1 className={styles["courses-heading"]}>YOUR COURSES</h1>
-      {courseAssignments.map(
+      <div className={styles["main-head-container"]}>
+        <h1 className={styles["courses-heading"]}>YOUR COURSES</h1>
+        <input
+          type="text"
+          placeholder="Search by course or content..."
+          value={searchTerm}
+          onChange={handleSearch}
+          className={styles.search_input}
+        />
+      </div>
+      {filteredCourseAssignments.map(
         ({ courseID, courseName, assignments, quizzes, pastPapers }) => (
           <div className={styles["main-container"]} key={courseID}>
             <h2 className={styles["course-id"]}>

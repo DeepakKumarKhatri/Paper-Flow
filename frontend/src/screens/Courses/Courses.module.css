@@ -108,8 +108,8 @@
 }
 
 .show-more-button {
-  background-color: #6895D2; 
-  color: #fff; 
+  background-color: #6895d2;
+  color: #fff;
   border: none;
   padding: 10px 20px;
   font-size: 16px;
@@ -132,19 +132,36 @@
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.button-container{
+.button-container {
   display: flex;
   justify-content: center;
   margin: 20px;
 }
 
-.show-more-button:hover{
+.show-more-button:hover {
   background-color: rgb(7, 59, 113);
   transform: scale(1.05);
 }
 
-.show-less-button:hover{
+.show-less-button:hover {
   background-color: #80111c;
   transform: scale(1.05);
 }
 
+.main-head-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.search_input {
+  width: 25%;
+  margin: 20px;
+  border-radius: 5px;
+  border: 2px solid #b4b4b8;
+  font-size: 15px;
+  padding-left: 40px;
+  background-image: url("../../assets/images/search_icon.png");
+  background-repeat: no-repeat;
+  background-position: 10px center;
+  background-size: 20px;
+}
