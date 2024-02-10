@@ -20,7 +20,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  padding-left: 15px;
+  /* padding-left: 15px; */
 }
 
 .courses-heading {
@@ -99,7 +99,7 @@
   border: 3px solid #1f2544;
   box-shadow: 1px 1px 10px #b4b4b8;
   margin: 5px;
-  border-radius: 5px;
+  border-radius: 10px;
 }
 
 .tags-recognize {
@@ -151,6 +151,11 @@
 .main-head-container {
   display: flex;
   justify-content: space-between;
+  border-radius: 5px;
+  border-bottom: 1px solid #929298;
+  background-color: #eeedeb;
+  margin-top: 5px;
+  margin-right: 5px;
 }
 
 .search_input {
@@ -165,4 +170,3 @@
   background-position: 10px center;
   background-size: 20px;
 }
-
