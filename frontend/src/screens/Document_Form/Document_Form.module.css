@@ -3,6 +3,10 @@
   max-width: 600px;
   margin: 0 auto;
   padding: 20px;
+  border: 3px solid #12372A;
+  border-radius: 10px;
+  padding: 50px;
+  margin-top: 30px;
 }
 
 .title {
