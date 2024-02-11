@@ -16,6 +16,16 @@
   margin: 10px;
 }
 
+.titleContainer{
+  display: flex;
+  justify-content: space-between;
+}
+
+.bookmark{
+  padding:10px;
+  padding-top:20px ;
+}
+
 .all-container {
   display: flex;
   flex-wrap: wrap;

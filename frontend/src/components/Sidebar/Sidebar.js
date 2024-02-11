@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
-import * as FaIcons from "react-icons/fa";
 import * as AiIcons from "react-icons/ai";
 import * as IoIcons from "react-icons/io";
-import { IoPeopleCircleSharp, IoPersonSharp } from "react-icons/io5";
+import {
+  IoPeopleCircleSharp,
+  IoPersonSharp,
+  IoNotificationsSharp,
+} from "react-icons/io5";
 import styles from "./Sidebar.module.css";
 import { Link } from "react-router-dom";
 import sidebar_logo from "../../assets/images/sidebar_logo.png";
@@ -97,13 +100,13 @@ const Sidebar = () => {
 
         <Link
           className={`${styles.headings} ${
-            activeTab === "Messages" ? styles.active : ""
+            activeTab === "Notifications" ? styles.active : ""
           }`}
-          onClick={() => handleSetActiveTab("Messages")}
+          onClick={() => handleSetActiveTab("Notifications")}
         >
           <li>
-            <FaIcons.FaEnvelopeOpenText />
-            <span>Messages</span>
+            <IoNotificationsSharp />
+            <span>Notifications</span>
           </li>
         </Link>
 

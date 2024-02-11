@@ -6,10 +6,12 @@ import { secureLink } from "../../helpers/secureLink";
 import DocumentSolution from "../../screens/PopUp/PopUp";
 import styles from "./AQP_Cards.module.css";
 import Ask_Solution_PopUp from "../Ask_Solution_PopUp/Ask_Solution_PopUp";
+import { IoBookmarkOutline, IoBookmark } from "react-icons/io5";
 
 const AQP_Card = ({ assignment, cardType, courseId, student }) => {
   const [showPopup, setShowPopup] = useState(false);
   const [userData, setUserData] = useState([]);
+  const [isBookmarked, setIsBookmarked] = useState(false);
 
   const getUserData = async () => {
     if (assignment.uploadedByUser !== null) {
@@ -67,11 +69,24 @@ const AQP_Card = ({ assignment, cardType, courseId, student }) => {
     setShowPopup(false);
   };
 
+  const handleBookmarkClick = () => {
+    setIsBookmarked(!isBookmarked);
+  };
+
   return (
     <div className={styles["courses-container"]} key={assignment._id}>
-      <h4 className={styles["assignment-heading"]}>
-        Title: {filterName(assignment.title)}
-      </h4>
+      <div className={styles.titleContainer}>
+        <h4 className={styles["assignment-heading"]}>
+          Title: {filterName(assignment.title)}
+        </h4>
+        <span className={styles.bookmark} onClick={handleBookmarkClick}>
+          {isBookmarked ? (
+            <IoBookmark title="Remove this document" />
+          ) : (
+            <IoBookmarkOutline title="Bookmark this document" />
+          )}
+        </span>
+      </div>
       <p className={styles["assignment-details"]}>
         Instructor: {assignment.instructor}
       </p>
