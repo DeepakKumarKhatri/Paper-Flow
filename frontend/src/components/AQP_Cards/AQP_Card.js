@@ -115,11 +115,7 @@ const AQP_Card = ({ assignment, cardType, courseId, student }) => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
-
-        const responseData = await response.json();
-        console.log(responseData);
       }
-
       setIsBookmarked(!isBookmarked);
     } catch (error) {
       console.error("Error:", error);
@@ -133,7 +129,7 @@ const AQP_Card = ({ assignment, cardType, courseId, student }) => {
           Title: {filterName(assignment.title)}
         </h4>
         <span
-          className={styles.bookmark}
+          className={`${styles.bookmark} ${isBookmarked ? styles.clicked : ""}`}
           onClick={() => {
             handleBookmarkClick(assignment._id);
           }}
