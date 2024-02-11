@@ -1,4 +1,5 @@
 const Student = require("../../models/student");
+const Bookmarks = require("../../models/bookmarks");
 
 const getStudent = async (req, res) => {
   try {
@@ -20,8 +21,10 @@ const addBookmarks = async (req, res) => {
     if (student) {
       const { title, uploadedByUser, url } = req.body;
       const newBookmark = { title, uploadedByUser, url };
-      student.studentBookmarks.push(newBookmark);
+      const bookmark = await Bookmarks.create(newBookmark);
+      student.studentBookmarks.push(bookmark._id);
       await student.save();
+
       res.send({ status: "OK" });
     } else {
       res.status(404).send({ message: "Student not found" });
@@ -40,6 +43,7 @@ const deleteBookmarks = async (req, res) => {
         (bookmark) => bookmark._id.toString() !== bookmarkId
       );
       await student.save();
+      await Bookmarks.findByIdAndDelete(bookmarkId);
       res.send({ status: "OK" });
     } else {
       res.status(404).send({ message: "Student not found" });

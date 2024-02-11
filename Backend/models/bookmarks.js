@@ -6,9 +6,7 @@ const bookMarksSchema = new mongoose.Schema(
       type: String,
     },
     uploadedByUser: {
-      type: mongoose.Types.ObjectId,
-      ref: "Student",
-      required: false,
+      type: String,
     },
     url: {
       type: String,
