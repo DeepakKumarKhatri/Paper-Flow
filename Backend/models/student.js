@@ -71,6 +71,12 @@ const studentSchema = new mongoose.Schema(
         },
       },
     ],
+    studentBookmarks: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Bookmarks",
+      },
+    ],
   },
   {
     timestamps: true,

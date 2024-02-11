@@ -173,10 +173,9 @@ router.delete(
 /*  ************************** PAST-PAPER END **************************   */
 
 /*  ************************** STUDENT START **************************   */
-
 router.get("/student/:studentID", studentInformationController.getStudent);
-
-
+router.post("/student/bookmarks/:studentID", studentInformationController.addBookmarks);
+router.delete("/student/bookmarks/:studentID", studentInformationController.deleteBookmarks);
 
 /*  ************************** STUDENT END **************************   */
 
