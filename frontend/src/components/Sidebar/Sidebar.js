@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 import * as FaIcons from "react-icons/fa";
 import * as AiIcons from "react-icons/ai";
@@ -6,6 +6,7 @@ import * as IoIcons from "react-icons/io";
 import { IoPeopleCircleSharp, IoPersonSharp } from "react-icons/io5";
 import styles from "./Sidebar.module.css";
 import { Link } from "react-router-dom";
+import sidebar_logo from "../../assets/images/sidebar_logo.png";
 
 const Sidebar = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -19,15 +20,42 @@ const Sidebar = () => {
     setActiveTab(tabName);
   };
 
+  useEffect(() => {
+    const handleEscKey = (event) => {
+      if (event.key === "Escape") {
+        toggleSidebar();
+      }
+    };
+    document.addEventListener("keydown", handleEscKey);
+    return () => {
+      document.removeEventListener("keydown", handleEscKey);
+    };
+  }, [sidebarOpen]);
+
   return (
     <div className={`${styles.sidebar} ${sidebarOpen ? styles.open : ""}`}>
       <div className={styles.sidebar_header}>
         {sidebarOpen ? (
-          <FaTimes className={styles.toggle_button} onClick={toggleSidebar} />
+          <FaTimes
+            title="Or Press ESC key"
+            className={styles.toggle_button}
+            onClick={toggleSidebar}
+          />
         ) : (
-          <FaBars className={styles.toggle_button} onClick={toggleSidebar} />
+          <FaBars
+            title="Or Press ESC key"
+            className={styles.toggle_button}
+            onClick={toggleSidebar}
+          />
         )}
-        <h2>Sidebar</h2>
+        <Link to={"/courses"}>
+          <img
+            className={styles.logo}
+            src={sidebar_logo}
+            draggable="false"
+            alt="Logo"
+          />
+        </Link>
       </div>
 
       <ul className={styles.sidebar_menu}>
