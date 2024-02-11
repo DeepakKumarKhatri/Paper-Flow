@@ -174,6 +174,7 @@ router.delete(
 
 /*  ************************** STUDENT START **************************   */
 router.get("/student/:studentID", studentInformationController.getStudent);
+router.get("/student/bookmarks/:studentID", studentInformationController.getBookmarks);
 router.post("/student/bookmarks/:studentID", studentInformationController.addBookmarks);
 router.delete("/student/bookmarks/:studentID", studentInformationController.deleteBookmarks);
 

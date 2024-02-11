@@ -15,17 +15,36 @@ const getStudent = async (req, res) => {
   }
 };
 
+const getBookmarks = async (req, res) => {
+  try {
+    const student = await Student.findById(req.params.studentID);
+    if (student) {
+      res.send({ status: "OK", data: student.studentBookmarks });
+    } else {
+      res.status(404).send({ message: "Student not found" });
+    }
+  } catch (error) {
+    res.status(500).send({ message: error.message });
+  }
+};
+
 const addBookmarks = async (req, res) => {
   try {
     const student = await Student.findById(req.params.studentID);
     if (student) {
       const { title, uploadedByUser, url } = req.body;
-      const newBookmark = { title, uploadedByUser, url };
-      const bookmark = await Bookmarks.create(newBookmark);
-      student.studentBookmarks.push(bookmark._id);
-      await student.save();
+      const existingBookmark = await Bookmarks.findOne({
+        title: title,
+      });
 
-      res.send({ status: "OK" });
+      if (!existingBookmark) {
+        const newBookmark = { title, uploadedByUser, url };
+        const bookmark = await Bookmarks.create(newBookmark);
+        student.studentBookmarks.push(bookmark._id);
+        await student.save();
+
+        res.send({ status: "OK" });
+      }
     } else {
       res.status(404).send({ message: "Student not found" });
     }
@@ -42,6 +61,7 @@ const deleteBookmarks = async (req, res) => {
       student.studentBookmarks = student.studentBookmarks.filter(
         (bookmark) => bookmark._id.toString() !== bookmarkId
       );
+      console.log(student.studentBookmarks)
       await student.save();
       await Bookmarks.findByIdAndDelete(bookmarkId);
       res.send({ status: "OK" });
@@ -57,4 +77,5 @@ module.exports = {
   getStudent,
   addBookmarks,
   deleteBookmarks,
+  getBookmarks,
 };

@@ -69,8 +69,93 @@ const AQP_Card = ({ assignment, cardType, courseId, student }) => {
     setShowPopup(false);
   };
 
-  const handleBookmarkClick = () => {
-    setIsBookmarked(!isBookmarked);
+  const handleBookmarkClick = async (title, uploadedByUser, url, id) => {
+    console.log("id: " + id)
+    const user = uploadedByUser !== null ? getUser(uploadedByUser) : "Admin";
+    try {
+      const response = await fetch(
+        `http://localhost:8000/student/student/bookmarks/${student._id}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const responseData = await response.json();
+      const bookmarks = responseData.data;
+
+      const body = JSON.stringify({
+        title: title,
+        uploadedByUser: user,
+        url: url,
+        objectID: id,
+      });
+
+      const bodyDelete = JSON.stringify({
+        objectID: id,
+      });
+
+      if (!isBookmarked) {
+        // Check if the bookmark already exists
+        const existingBookmark = bookmarks.find(
+          (bookmark) =>
+            bookmark.title === title &&
+            bookmark.uploadedByUser === user &&
+            bookmark.url === url &&
+            bookmark.objectID === id
+        );
+
+        if (existingBookmark) {
+          console.log("Bookmark already exists");
+          return;
+        }
+
+        // If the bookmark doesn't exist, add it
+        const addResponse = await fetch(
+          `http://localhost:8000/student/student/bookmarks/${student._id}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: body,
+          }
+        );
+
+        if (!addResponse.ok) {
+          throw new Error("Failed to add bookmark");
+        }
+
+        console.log("Bookmark added successfully");
+      } else {
+        const deleteResponse = await fetch(
+          `http://localhost:8000/student/student/bookmarks/${student._id}`,
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: bodyDelete,
+          }
+        );
+
+        if (!deleteResponse.ok) {
+          throw new Error("Failed to delete bookmark");
+        }
+
+        console.log("Bookmark deleted successfully");
+      }
+
+      setIsBookmarked(!isBookmarked);
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   return (
@@ -79,7 +164,17 @@ const AQP_Card = ({ assignment, cardType, courseId, student }) => {
         <h4 className={styles["assignment-heading"]}>
           Title: {filterName(assignment.title)}
         </h4>
-        <span className={styles.bookmark} onClick={handleBookmarkClick}>
+        <span
+          className={styles.bookmark}
+          onClick={() => {
+            handleBookmarkClick(
+              assignment.title,
+              assignment.uploadedByUser,
+              assignment.url,
+              assignment._id
+            );
+          }}
+        >
           {isBookmarked ? (
             <IoBookmark title="Remove this document" />
           ) : (
