@@ -13,6 +13,11 @@ const AQP_Card = ({ assignment, cardType, courseId, student }) => {
   const [userData, setUserData] = useState([]);
   const [isBookmarked, setIsBookmarked] = useState(false);
 
+  useEffect(() => {
+    // Check if the assignment ID is present in the student's bookmarks
+    setIsBookmarked(student.studentBookmarks.includes(assignment._id));
+  }, [student.studentBookmarks, assignment._id]);
+
   const getUserData = async () => {
     if (assignment.uploadedByUser !== null) {
       try {
@@ -69,87 +74,50 @@ const AQP_Card = ({ assignment, cardType, courseId, student }) => {
     setShowPopup(false);
   };
 
-  const handleBookmarkClick = async (title, uploadedByUser, url, id) => {
-    console.log("id: " + id)
-    const user = uploadedByUser !== null ? getUser(uploadedByUser) : "Admin";
+  const handleBookmarkClick = async (id) => {
     try {
-      const response = await fetch(
-        `http://localhost:8000/student/student/bookmarks/${student._id}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-
-      const responseData = await response.json();
-      const bookmarks = responseData.data;
-
-      const body = JSON.stringify({
-        title: title,
-        uploadedByUser: user,
-        url: url,
+      const body = {
         objectID: id,
-      });
-
-      const bodyDelete = JSON.stringify({
-        objectID: id,
-      });
+      };
 
       if (!isBookmarked) {
-        // Check if the bookmark already exists
-        const existingBookmark = bookmarks.find(
-          (bookmark) =>
-            bookmark.title === title &&
-            bookmark.uploadedByUser === user &&
-            bookmark.url === url &&
-            bookmark.objectID === id
-        );
-
-        if (existingBookmark) {
-          console.log("Bookmark already exists");
-          return;
-        }
-
-        // If the bookmark doesn't exist, add it
-        const addResponse = await fetch(
+        // Add bookmark
+        const response = await fetch(
           `http://localhost:8000/student/student/bookmarks/${student._id}`,
           {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
-            body: body,
+            body: JSON.stringify(body),
           }
         );
 
-        if (!addResponse.ok) {
-          throw new Error("Failed to add bookmark");
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
         }
 
-        console.log("Bookmark added successfully");
+        const responseData = await response.json();
+        console.log(responseData);
       } else {
-        const deleteResponse = await fetch(
+        // Remove bookmark
+        const response = await fetch(
           `http://localhost:8000/student/student/bookmarks/${student._id}`,
           {
             method: "DELETE",
             headers: {
               "Content-Type": "application/json",
             },
-            body: bodyDelete,
+            body: JSON.stringify(body),
           }
         );
 
-        if (!deleteResponse.ok) {
-          throw new Error("Failed to delete bookmark");
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
         }
 
-        console.log("Bookmark deleted successfully");
+        const responseData = await response.json();
+        console.log(responseData);
       }
 
       setIsBookmarked(!isBookmarked);
@@ -167,12 +135,7 @@ const AQP_Card = ({ assignment, cardType, courseId, student }) => {
         <span
           className={styles.bookmark}
           onClick={() => {
-            handleBookmarkClick(
-              assignment.title,
-              assignment.uploadedByUser,
-              assignment.url,
-              assignment._id
-            );
+            handleBookmarkClick(assignment._id);
           }}
         >
           {isBookmarked ? (

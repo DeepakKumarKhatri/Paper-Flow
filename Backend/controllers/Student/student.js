@@ -1,5 +1,4 @@
 const Student = require("../../models/student");
-const Bookmarks = require("../../models/bookmarks");
 
 const getStudent = async (req, res) => {
   try {
@@ -19,7 +18,7 @@ const getBookmarks = async (req, res) => {
   try {
     const student = await Student.findById(req.params.studentID);
     if (student) {
-      res.send({ status: "OK", data: student.studentBookmarks });
+      res.send({ data: student.studentBookmarks });
     } else {
       res.status(404).send({ message: "Student not found" });
     }
@@ -32,18 +31,16 @@ const addBookmarks = async (req, res) => {
   try {
     const student = await Student.findById(req.params.studentID);
     if (student) {
-      const { title, uploadedByUser, url } = req.body;
-      const existingBookmark = await Bookmarks.findOne({
-        title: title,
-      });
-
-      if (!existingBookmark) {
-        const newBookmark = { title, uploadedByUser, url };
-        const bookmark = await Bookmarks.create(newBookmark);
-        student.studentBookmarks.push(bookmark._id);
+      const objectID = req.body.objectID;
+      const existing = student.studentBookmarks.find(
+        (id) => id.toString() === objectID
+      );
+      if (!existing) {
+        student.studentBookmarks.push(objectID);
         await student.save();
-
         res.send({ status: "OK" });
+      } else {
+        res.send({ message: "Already Exists" });
       }
     } else {
       res.status(404).send({ message: "Student not found" });
@@ -57,14 +54,15 @@ const deleteBookmarks = async (req, res) => {
   try {
     const student = await Student.findById(req.params.studentID);
     if (student) {
-      const bookmarkId = req.body.objectID;
-      student.studentBookmarks = student.studentBookmarks.filter(
-        (bookmark) => bookmark._id.toString() !== bookmarkId
-      );
-      console.log(student.studentBookmarks)
-      await student.save();
-      await Bookmarks.findByIdAndDelete(bookmarkId);
-      res.send({ status: "OK" });
+      const objectID = req.body.objectID;
+      const index = student.studentBookmarks.indexOf(objectID);
+      if (index !== -1) {
+        student.studentBookmarks.splice(index, 1);
+        await student.save();
+        res.send({ status: "OK" });
+      } else {
+        res.status(404).send({ message: "Bookmark not found" });
+      }
     } else {
       res.status(404).send({ message: "Student not found" });
     }
