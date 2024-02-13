@@ -54,3 +54,7 @@
   font-weight: 500;
   margin-bottom: 10px;
 }
+
+.linkTag{
+  text-decoration: underline #444;
+}

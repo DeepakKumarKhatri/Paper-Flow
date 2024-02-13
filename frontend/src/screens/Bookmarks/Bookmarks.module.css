@@ -14,7 +14,7 @@
 .courseId {
   font-size: 24px;
   margin-bottom: 30px;
-  color: #1F2544;
+  color: #1f2544;
 }
 
 .allContainer {
@@ -22,4 +22,34 @@
   flex-wrap: wrap;
   gap: 20px;
   justify-content: flex-start;
+}
+
+.search_input {
+  width: 25%;
+  margin: 20px;
+  border-radius: 5px;
+  border: 2px solid #b4b4b8;
+  font-size: 15px;
+  padding-left: 40px;
+  background-image: url("../../assets/images/search_icon.png");
+  background-repeat: no-repeat;
+  background-position: 10px center;
+  background-size: 20px;
+}
+
+.main_head_container {
+  display: flex;
+  justify-content: space-between;
+  border-radius: 5px;
+  border-bottom: 1px solid #929298;
+  background-color: #eeedeb;
+  margin-top: 5px;
+  margin-right: 5px;
+}
+
+.courses_heading {
+  font-size: 32px;
+  color: #211c6a;
+  margin-bottom: 20px;
+  margin-left: 20px;
 }

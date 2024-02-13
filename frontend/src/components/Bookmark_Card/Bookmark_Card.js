@@ -62,22 +62,25 @@ const Bookmark_Card = ({ document, studentInformation }) => {
         }
       }
       setIsBookmarked(!isBookmarked);
+      
     } catch (error) {
       console.error("Error:", error);
     }
   };
 
   return (
-    <Link
-      to={"/document"}
-      state={{ urlFile: secureLink(document?.url) }}
-      className={styles.courses_container}
-      title="Checkout document"
-    >
+    <div className={styles.courses_container}>
       <div className={styles.titleContainer}>
-        <h4 className={styles.assignment_heading}>
-          Title:{filterName(document.title)}
-        </h4>
+        <Link
+          to={"/document"}
+          state={{ urlFile: secureLink(document?.url) }}
+          className={styles.linkTag}
+          title="Checkout document"
+        >
+          <h4 className={styles.assignment_heading}>
+            Title:{filterName(document.title)}
+          </h4>
+        </Link>
         <span
           className={`${styles.bookmark} ${isBookmarked ? styles.clicked : ""}`}
           onClick={() => {
@@ -100,7 +103,7 @@ const Bookmark_Card = ({ document, studentInformation }) => {
       <p className={styles.assignment_details}>
         Uploaded on: {getDate(document.createdAt)}
       </p>
-    </Link>
+    </div>
   );
 };
 
