@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import Bookmark_Card from "../../components/Bookmark_Card/Bookmark_Card";
 import { UseUserCourses } from "../../context/UserCourses";
 import styles from "../Bookmarks/Bookmarks.module.css";
-import { Link } from "react-router-dom";
 
 const Bookmarks = () => {
   const userCourses = UseUserCourses();
@@ -29,15 +28,13 @@ const Bookmarks = () => {
                   className={styles["section-container"]}
                   key={`${courseID}-assignments`}
                 >
-                  <h2 className={styles["tags-recognize"]}>
-                    AVAILABLE ASSIGNMENTS
-                  </h2>
                   {assignments.assignments.map(
                     (assignment) =>
                       isBookmarked(assignment._id) && (
                         <Bookmark_Card
                           key={assignment._id}
                           document={assignment}
+                          studentInformation={studentInformation}
                         />
                       )
                   )}
@@ -48,13 +45,14 @@ const Bookmarks = () => {
                   className={styles["section-container"]}
                   key={`${courseID}-quizzes`}
                 >
-                  <h2 className={styles["tags-recognize"]}>
-                    AVAILABLE QUIZZES
-                  </h2>
                   {quizzes.quizzes.map(
                     (quiz) =>
                       isBookmarked(quiz._id) && (
-                        <Bookmark_Card key={quiz._id} document={quiz} />
+                        <Bookmark_Card
+                          key={quiz._id}
+                          document={quiz}
+                          studentInformation={studentInformation}
+                        />
                       )
                   )}
                 </div>
@@ -70,6 +68,7 @@ const Bookmarks = () => {
                         <Bookmark_Card
                           key={pastPaper._id}
                           document={pastPaper}
+                          studentInformation={studentInformation}
                         />
                       )
                   )}

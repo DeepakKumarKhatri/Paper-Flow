@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "../Bookmark_Card/Bookmark_Card.module.css";
 import { IoBookmarkOutline, IoBookmark } from "react-icons/io5";
 import { UseUserCourses } from "../../context/UserCourses";
@@ -9,6 +9,10 @@ const Bookmark_Card = ({ document, studentInformation }) => {
   const [isBookmarked, setIsBookmarked] = useState(false);
   const allStudents = UseUserCourses();
 
+  useEffect(() => {
+    setIsBookmarked(studentInformation.studentBookmarks.includes(document._id));
+  }, [studentInformation.studentBookmarks, document._id]);
+
   const getUser = (userID) => {
     const user = allStudents.allStudents.data.find(
       (userData) => userData._id === userID
@@ -16,9 +20,51 @@ const Bookmark_Card = ({ document, studentInformation }) => {
     return user ? user.name : "Admin";
   };
 
-  const handleBookmarkClick = () => {
-    setIsBookmarked(!isBookmarked);
+  const handleBookmarkClick = async (id) => {
+    try {
+      const body = {
+        objectID: id,
+      };
+
+      if (!isBookmarked) {
+        // Add bookmark
+        const response = await fetch(
+          `http://localhost:8000/student/student/bookmarks/${studentInformation._id}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(body),
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+      } else {
+        // Remove bookmark
+        const response = await fetch(
+          `http://localhost:8000/student/student/bookmarks/${studentInformation._id}`,
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(body),
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+      }
+      setIsBookmarked(!isBookmarked);
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
+
   return (
     <div className={styles.courses_container}>
       <div className={styles.titleContainer}>
@@ -28,7 +74,7 @@ const Bookmark_Card = ({ document, studentInformation }) => {
         <span
           className={`${styles.bookmark} ${isBookmarked ? styles.clicked : ""}`}
           onClick={() => {
-            handleBookmarkClick();
+            handleBookmarkClick(document._id);
           }}
         >
           {isBookmarked ? (
