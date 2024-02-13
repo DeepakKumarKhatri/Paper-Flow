@@ -14,6 +14,23 @@ const getStudent = async (req, res) => {
   }
 };
 
+const getAllStudents = async (req, res) => {
+  try {
+    const students = await Student.find({});
+
+    if (students) {
+      const studentsWithoutPassword = students.map((student) => {
+        const { password, ...studentWithoutPassword } = student.toObject();
+        return studentWithoutPassword;
+      });
+
+      res.send({ data: studentsWithoutPassword });
+    }
+  } catch (error) {
+    res.status(500).send({ message: error.message });
+  }
+};
+
 const getBookmarks = async (req, res) => {
   try {
     const student = await Student.findById(req.params.studentID);
@@ -76,4 +93,5 @@ module.exports = {
   addBookmarks,
   deleteBookmarks,
   getBookmarks,
+  getAllStudents,
 };

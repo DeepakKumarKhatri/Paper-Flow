@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { filterName } from "../../helpers/filterName";
 import { getUserCoursesData } from "../../helpers/course";
 import { UseUserCourses } from "../../context/UserCourses";
+import { getAllStudents } from "../../helpers/allStudents";
 
 const Courses = () => {
   const [courseAssignments, setCourseAssignments] = useState([]);
@@ -13,14 +14,15 @@ const Courses = () => {
   const [numberOfItemsToShow, setNumberOfItemsToShow] = useState(3);
   const [searchTerm, setSearchTerm] = useState("");
   const coursesContext = UseUserCourses();
-  console.log(coursesContext);
 
   useEffect(() => {
     const fetchData = async () => {
       const userCourses = await getUserCoursesData();
+      const allStudents = await getAllStudents();
       setCourseAssignments(userCourses.assignmentData);
       setStudentInformation(userCourses.studentData);
       coursesContext.setUserCourses(userCourses);
+      coursesContext.setAllStudents(allStudents);
     };
     fetchData();
   }, []);

@@ -7,33 +7,17 @@ import DocumentSolution from "../../screens/PopUp/PopUp";
 import styles from "./AQP_Cards.module.css";
 import Ask_Solution_PopUp from "../Ask_Solution_PopUp/Ask_Solution_PopUp";
 import { IoBookmarkOutline, IoBookmark } from "react-icons/io5";
+import { UseUserCourses } from "../../context/UserCourses";
 
 const AQP_Card = ({ assignment, cardType, courseId, student }) => {
+  const allStudents = UseUserCourses();
   const [showPopup, setShowPopup] = useState(false);
-  const [userData, setUserData] = useState([]);
   const [isBookmarked, setIsBookmarked] = useState(false);
 
   useEffect(() => {
     // Check if the assignment ID is present in the student's bookmarks
     setIsBookmarked(student.studentBookmarks.includes(assignment._id));
   }, [student.studentBookmarks, assignment._id]);
-
-  const getUserData = async () => {
-    if (assignment.uploadedByUser !== null) {
-      try {
-        const data = await fetch(
-          `http://localhost:8000/student/student/${assignment.uploadedByUser}`
-        );
-        if (!data.ok) {
-          throw new Error("Failed to fetch user data");
-        }
-        const json = await data.json();
-        setUserData((prevUserData) => [...prevUserData, json.data]);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-  };
 
   const getLengthSolutions = () => {
     if (cardType === "Assignment") {
@@ -58,13 +42,11 @@ const AQP_Card = ({ assignment, cardType, courseId, student }) => {
   };
 
   const getUser = (userID) => {
-    const user = userData.find((userData) => userData._id === userID);
+    const user = allStudents.allStudents.data.find(
+      (userData) => userData._id === userID
+    );
     return user ? user.name : "Admin";
   };
-
-  useEffect(() => {
-    getUserData();
-  }, []);
 
   const handleOpenPopup = () => {
     setShowPopup(true);
@@ -98,7 +80,6 @@ const AQP_Card = ({ assignment, cardType, courseId, student }) => {
         }
 
         const responseData = await response.json();
-        console.log(responseData);
       } else {
         // Remove bookmark
         const response = await fetch(

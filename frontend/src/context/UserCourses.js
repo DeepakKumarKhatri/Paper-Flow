@@ -9,8 +9,11 @@ export const UseUserCourses = () => {
 
 export const UserCoursesProvider = (props) => {
   const [userCourses, setUserCourses] = useState([]);
+  const [allStudents, setAllStudents] = useState([]);
   return (
-    <UserCoursesContext.Provider value={{ userCourses, setUserCourses }}>
+    <UserCoursesContext.Provider
+      value={{ userCourses, setUserCourses, allStudents, setAllStudents }}
+    >
       {props.children}
     </UserCoursesContext.Provider>
   );
