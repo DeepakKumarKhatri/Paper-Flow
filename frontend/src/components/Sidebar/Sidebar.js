@@ -87,6 +87,7 @@ const Sidebar = () => {
         </Link>
 
         <Link
+          to={"/bookmarks"}
           className={`${styles.headings} ${
             activeTab === "My Bookmarks" ? styles.active : ""
           }`}

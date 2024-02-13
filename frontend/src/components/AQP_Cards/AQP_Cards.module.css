@@ -24,12 +24,13 @@
 .bookmark {
   padding: 10px;
   padding-top: 20px;
-  font-size: 20px;
+  font-size: 16px;
   transition: transform 0.3s ease;
 }
 
 .bookmark.clicked {
   transform: scale(1.2); /* Example scale transformation */
+  color: #294B29;
 }
 
 .bookmark:hover {

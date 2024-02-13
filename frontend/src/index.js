@@ -7,6 +7,8 @@ import DocumentComp from "./screens/Document/Document";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import DocumentSolution from "./screens/PopUp/PopUp";
 import Document_Form from "./screens/Document_Form/Document_Form";
+import Bookmarks from "./screens/Bookmarks/Bookmarks";
+import { UserCoursesProvider } from "./context/UserCourses";
 
 const appRouter = createBrowserRouter([
   {
@@ -33,9 +35,17 @@ const appRouter = createBrowserRouter([
         path: "/form/:courseID",
         element: <Document_Form />,
       },
+      {
+        path: "/bookmarks",
+        element: <Bookmarks />,
+      },
     ],
   },
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(<RouterProvider router={appRouter} />);
+root.render(
+  <UserCoursesProvider>
+    <RouterProvider router={appRouter} />
+  </UserCoursesProvider>
+);

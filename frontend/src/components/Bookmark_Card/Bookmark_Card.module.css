@@ -1,0 +1,31 @@
+.courses_container {
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  padding: 5px;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 2px solid #dae7e5;
+  background-color: #eeeeee;
+  width: 40%;
+  align-items: center;
+  justify-content: center;
+  margin: 10px;
+}
+
+.titleContainer {
+  display: flex;
+  justify-content: space-between;
+}
+
+.assignment_heading {
+  font-size: 16px;
+  color: #444;
+  margin-bottom: 5px;
+}
+
+.assignment_details {
+  font-size: 14px;
+  color: #323131;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
