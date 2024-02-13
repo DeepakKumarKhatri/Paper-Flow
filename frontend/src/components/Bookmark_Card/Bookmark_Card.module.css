@@ -6,15 +6,40 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   border: 2px solid #dae7e5;
   background-color: #eeeeee;
-  width: 40%;
+  width: 30%;
   align-items: center;
   justify-content: center;
-  margin: 10px;
+  text-decoration: none;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.courses_container:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 2px 4px #b4b4b8;
+  align-items: center;
 }
 
 .titleContainer {
   display: flex;
   justify-content: space-between;
+}
+
+.bookmark {
+  padding: 10px;
+  padding-top: 20px;
+  font-size: 16px;
+  transition: transform 0.3s ease;
+}
+
+.bookmark.clicked {
+  transform: scale(1.2);
+  color: #294b29;
+}
+
+.bookmark:hover {
+  background-color: #fefbf6;
+  transform: scale(1.02);
+  border-radius: 10px;
 }
 
 .assignment_heading {

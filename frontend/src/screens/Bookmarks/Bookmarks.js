@@ -15,66 +15,47 @@ const Bookmarks = () => {
   };
 
   return (
-    <div>
+    <div className={styles.container}>
       {userCourses?.userCourses.assignmentData?.map(
         ({ courseID, courseName, assignments, quizzes, pastPapers }) => (
-          <div className={styles["main-container"]} key={courseID}>
-            <h2 className={styles["course-id"]}>
+          <div className={styles.mainContainer} key={courseID}>
+            <h2 className={styles.courseId}>
               Course: {courseID} {courseName}
             </h2>
-            <div className={styles["all-container"]}>
-              {assignments.assignments.length > 0 && (
-                <div
-                  className={styles["section-container"]}
-                  key={`${courseID}-assignments`}
-                >
-                  {assignments.assignments.map(
-                    (assignment) =>
-                      isBookmarked(assignment._id) && (
-                        <Bookmark_Card
-                          key={assignment._id}
-                          document={assignment}
-                          studentInformation={studentInformation}
-                        />
-                      )
-                  )}
-                </div>
-              )}
-              {quizzes.quizzes.length > 0 && (
-                <div
-                  className={styles["section-container"]}
-                  key={`${courseID}-quizzes`}
-                >
-                  {quizzes.quizzes.map(
-                    (quiz) =>
-                      isBookmarked(quiz._id) && (
-                        <Bookmark_Card
-                          key={quiz._id}
-                          document={quiz}
-                          studentInformation={studentInformation}
-                        />
-                      )
-                  )}
-                </div>
-              )}
-              {pastPapers.pastPapers.length > 0 && (
-                <div
-                  className={styles["section-container"]}
-                  key={`${courseID}-pastPapers`}
-                >
-                  {pastPapers.pastPapers.map(
-                    (pastPaper) =>
-                      isBookmarked(pastPaper._id) && (
-                        <Bookmark_Card
-                          key={pastPaper._id}
-                          document={pastPaper}
-                          studentInformation={studentInformation}
-                        />
-                      )
-                  )}
-                  <div className={styles["button-container"]}></div>
-                </div>
-              )}
+            <div className={styles.allContainer}>
+              {assignments.assignments.length > 0 &&
+                assignments.assignments.map(
+                  (assignment) =>
+                    isBookmarked(assignment._id) && (
+                      <Bookmark_Card
+                        key={assignment._id}
+                        document={assignment}
+                        studentInformation={studentInformation}
+                      />
+                    )
+                )}
+              {quizzes.quizzes.length > 0 &&
+                quizzes.quizzes.map(
+                  (quiz) =>
+                    isBookmarked(quiz._id) && (
+                      <Bookmark_Card
+                        key={quiz._id}
+                        document={quiz}
+                        studentInformation={studentInformation}
+                      />
+                    )
+                )}
+              {pastPapers.pastPapers.length > 0 &&
+                pastPapers.pastPapers.map(
+                  (pastPaper) =>
+                    isBookmarked(pastPaper._id) && (
+                      <Bookmark_Card
+                        key={pastPaper._id}
+                        document={pastPaper}
+                        studentInformation={studentInformation}
+                      />
+                    )
+                )}
             </div>
           </div>
         )

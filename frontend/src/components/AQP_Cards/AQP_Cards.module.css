@@ -29,7 +29,7 @@
 }
 
 .bookmark.clicked {
-  transform: scale(1.2); /* Example scale transformation */
+  transform: scale(1.2);
   color: #294B29;
 }
 

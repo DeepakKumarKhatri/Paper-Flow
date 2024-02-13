@@ -4,6 +4,8 @@ import { IoBookmarkOutline, IoBookmark } from "react-icons/io5";
 import { UseUserCourses } from "../../context/UserCourses";
 import { getDate } from "../../helpers/getDate";
 import { filterName } from "../../helpers/filterName";
+import { Link } from "react-router-dom";
+import { secureLink } from "../../helpers/secureLink";
 
 const Bookmark_Card = ({ document, studentInformation }) => {
   const [isBookmarked, setIsBookmarked] = useState(false);
@@ -66,7 +68,12 @@ const Bookmark_Card = ({ document, studentInformation }) => {
   };
 
   return (
-    <div className={styles.courses_container}>
+    <Link
+      to={"/document"}
+      state={{ urlFile: secureLink(document?.url) }}
+      className={styles.courses_container}
+      title="Checkout document"
+    >
       <div className={styles.titleContainer}>
         <h4 className={styles.assignment_heading}>
           Title:{filterName(document.title)}
@@ -93,7 +100,7 @@ const Bookmark_Card = ({ document, studentInformation }) => {
       <p className={styles.assignment_details}>
         Uploaded on: {getDate(document.createdAt)}
       </p>
-    </div>
+    </Link>
   );
 };
 
