@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import Bookmark_Card from "../../components/Bookmark_Card/Bookmark_Card";
 import { UseUserCourses } from "../../context/UserCourses";
 import styles from "../Bookmarks/Bookmarks.module.css";
@@ -6,10 +6,12 @@ import { filterName } from "../../helpers/filterName";
 
 const Bookmarks = () => {
   const userCourses = UseUserCourses();
-  const [studentInformation, setStudentInformation] = useState(
-    userCourses?.userCourses.studentData || []
-  );
   const [searchTerm, setSearchTerm] = useState("");
+
+  const studentInformation = useMemo(
+    () => userCourses?.userCourses.studentData || [],
+    [userCourses?.userCourses.studentData]
+  );
 
   const isBookmarked = (documentID) => {
     return studentInformation?.studentBookmarks?.includes(
@@ -21,23 +23,23 @@ const Bookmarks = () => {
     setSearchTerm(e.target.value);
   };
 
-  const filteredCourseAssignments =
-    userCourses?.userCourses.assignmentData?.filter(
-      ({ courseID, courseName, assignments, quizzes, pastPapers }) => {
+  const filteredCourseAssignments = useMemo(() => {
+    return userCourses?.userCourses.assignmentData?.filter(
+      ({ assignments, quizzes, pastPapers }) => {
         const combinedContent = assignments.assignments.concat(
           quizzes.quizzes,
           pastPapers.pastPapers
         );
-        return (
-          courseID.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          courseName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          combinedContent.some((item) => {
-            const filteredTitle = filterName(item.title).toLowerCase();
-            return filteredTitle.includes(searchTerm.toLowerCase());
-          })
-        );
+        return combinedContent.some((item) => {
+          const filteredTitle = filterName(item.title).toLowerCase();
+          return (
+            filteredTitle.includes(searchTerm.toLowerCase()) &&
+            isBookmarked(item._id)
+          );
+        });
       }
     );
+  }, [userCourses?.userCourses.assignmentData, searchTerm]);
 
   return (
     <div className={styles.container}>
@@ -51,49 +53,71 @@ const Bookmarks = () => {
           className={styles.search_input}
         />
       </div>
-      {filteredCourseAssignments.map(
-        ({ courseID, courseName, assignments, quizzes, pastPapers }) => (
-          <div className={styles.mainContainer} key={courseID}>
-            <h2 className={styles.courseId}>
-              Course: {courseID} {courseName}
-            </h2>
-            <div className={styles.allContainer}>
-              {assignments.assignments.length > 0 &&
-                assignments.assignments.map(
-                  (assignment) =>
-                    isBookmarked(assignment._id) && (
-                      <Bookmark_Card
-                        key={assignment._id}
-                        document={assignment}
-                        studentInformation={studentInformation}
-                      />
-                    )
-                )}
-              {quizzes.quizzes.length > 0 &&
-                quizzes.quizzes.map(
-                  (quiz) =>
-                    isBookmarked(quiz._id) && (
-                      <Bookmark_Card
-                        key={quiz._id}
-                        document={quiz}
-                        studentInformation={studentInformation}
-                      />
-                    )
-                )}
-              {pastPapers.pastPapers.length > 0 &&
-                pastPapers.pastPapers.map(
-                  (pastPaper) =>
-                    isBookmarked(pastPaper._id) && (
-                      <Bookmark_Card
-                        key={pastPaper._id}
-                        document={pastPaper}
-                        studentInformation={studentInformation}
-                      />
-                    )
-                )}
-            </div>
-          </div>
-        )
+      {filteredCourseAssignments?.map(
+        ({ courseID, courseName, assignments, quizzes, pastPapers }) => {
+          const bookmarkedAssignments = assignments.assignments.reduce(
+            (acc, assignment) => {
+              if (isBookmarked(assignment._id)) {
+                acc.push(assignment);
+              }
+              return acc;
+            },
+            []
+          );
+          const bookmarkedQuizzes = quizzes.quizzes.reduce((acc, quiz) => {
+            if (isBookmarked(quiz._id)) {
+              acc.push(quiz);
+            }
+            return acc;
+          }, []);
+          const bookmarkedPapers = pastPapers.pastPapers.reduce(
+            (acc, paper) => {
+              if (isBookmarked(paper._id)) {
+                acc.push(paper);
+              }
+              return acc;
+            },
+            []
+          );
+
+          if (
+            bookmarkedAssignments.length > 0 ||
+            bookmarkedQuizzes.length > 0 ||
+            bookmarkedPapers.length > 0
+          ) {
+            return (
+              <div className={styles.mainContainer} key={courseID}>
+                <h2 className={styles.courseId}>
+                  Course: {courseID} {courseName}
+                </h2>
+                <div className={styles.allContainer}>
+                  {bookmarkedAssignments.map((assignment) => (
+                    <Bookmark_Card
+                      key={assignment._id}
+                      document={assignment}
+                      studentInformation={studentInformation}
+                    />
+                  ))}
+                  {bookmarkedQuizzes.map((quiz) => (
+                    <Bookmark_Card
+                      key={quiz._id}
+                      document={quiz}
+                      studentInformation={studentInformation}
+                    />
+                  ))}
+                  {bookmarkedPapers.map((paper) => (
+                    <Bookmark_Card
+                      key={paper._id}
+                      document={paper}
+                      studentInformation={studentInformation}
+                    />
+                  ))}
+                </div>
+              </div>
+            );
+          }
+          return null;
+        }
       )}
     </div>
   );

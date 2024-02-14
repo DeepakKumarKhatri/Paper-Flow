@@ -139,7 +139,10 @@
   }
 }
 
-.sidebar:not(.open) .sidebar_menu .active,
-.sidebar:not(.open) .sidebar_header .logo {
+.sidebar:not(.open) .sidebar_menu .active {
   display: none;
+}
+
+.sidebar:not(.open) .sidebar_header .logo {
+  width: 50px;
 }

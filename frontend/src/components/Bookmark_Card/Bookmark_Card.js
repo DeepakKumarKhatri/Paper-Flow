@@ -62,12 +62,10 @@ const Bookmark_Card = ({ document, studentInformation }) => {
         }
       }
       setIsBookmarked(!isBookmarked);
-      
     } catch (error) {
       console.error("Error:", error);
     }
   };
-
   return (
     <div className={styles.courses_container}>
       <div className={styles.titleContainer}>
