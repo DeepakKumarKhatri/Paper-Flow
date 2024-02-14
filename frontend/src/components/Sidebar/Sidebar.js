@@ -15,10 +15,12 @@ import {
 import styles from "./Sidebar.module.css";
 import { Link } from "react-router-dom";
 import sidebar_logo from "../../assets/images/sidebar_logo.png";
+import { UseUserCourses } from "../../context/UserCourses";
 
 const Sidebar = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+  const userData = UseUserCourses();
 
   const toggleUserDropdown = () => {
     setUserDropdownOpen(!userDropdownOpen);
@@ -74,10 +76,18 @@ const Sidebar = () => {
           >
             <div className={styles.userToggle}>
               <div>
-                <IoAccessibilitySharp/>
-                <span>User</span>
+                <IoAccessibilitySharp />
+                <span>
+                  {userData?.userCourses?.studentData?.name || "User"}
+                </span>
               </div>
-              <>{userDropdownOpen ? <IoCaretUp /> : <IoCaretDown />}</>
+              <>
+                {userDropdownOpen ? (
+                  <IoCaretUp className={styles.updownBtn} />
+                ) : (
+                  <IoCaretDown className={styles.updownBtn} />
+                )}
+              </>
             </div>
           </div>
           <ul

@@ -98,6 +98,20 @@
 .dropdown_menu {
   display: none;
   padding-left: 20px;
+  transition: opacity 0.3s ease, max-height 0.3s ease;
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+}
+
+.dropdown_menu.active {
+  display: block;
+  opacity: 1;
+  max-height: 200px;
+}
+
+.dropdown_menu.active li {
+  animation: slideIn 0.3s ease forwards;
 }
 
 .dropdown_menu li {
@@ -127,7 +141,8 @@
   }
 }
 
-.sidebar:not(.open) .sidebar_menu .active {
+.sidebar:not(.open) .sidebar_menu .active,
+.sidebar:not(.open) .sidebar_menu .updownBtn {
   display: none;
 }
 
@@ -145,4 +160,12 @@
 .userToggle {
   display: flex;
   justify-content: space-between;
+}
+
+.updownBtn {
+  transition: transform 0.3s ease;
+}
+
+.dropdown_menu.active .updownBtn {
+  transform: rotate(180deg);
 }
